@@ -12,54 +12,77 @@
     <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.cn" />
     <link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.cn/css2?family=Fira+Code:w400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:w400;500;600;700;800;900&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap" />
     <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
     <script src="/js/lib/highlight.js"></script>
+    <script> const mixins = {}; </script>
+    <script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
     <script src="/js/lib/preview.js"></script>
     <script src="/js/lib/home.js"></script>
     <link rel="stylesheet" href="/css/main.css" />
 </head>
 <body>
-    <div id="app" :class="{ 'blur': hiddenMenu }">
-        <div id="menu" :class="{ hidden: hiddenMenu }">
+    <div id="layout">
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
             <nav id="desktop-menu">
                 <a class="title" href="/">
-                    <span class="name">龙虾养殖户</span>
+                    <span>为美好的世界献上问候</span>
                 </a>
                 <a href="/">
-                    <i class="fa-solid fa-house"></i>
+                    <i class="fa-solid fa-house fa-fw"></i>
                     <span>&ensp;Home</span>
                 </a>
                 <a href="/about">
-                    <i class="fa-solid fa-id-card"></i>
+                    <i class="fa-solid fa-id-card fa-fw"></i>
                     <span>&ensp;About</span>
                 </a>
                 <a href="/archives">
-                    <i class="fa-solid fa-box-archive"></i>
+                    <i class="fa-solid fa-box-archive fa-fw"></i>
                     <span>&ensp;Archives</span>
                 </a>
             </nav>
             <nav id="mobile-menu">
-                <a href="/">
-                    <i class="fa-solid fa-house"></i>
-                    <span>&ensp;Home</span>
-                </a>
-                <a href="/about">
-                    <i class="fa-solid fa-id-card"></i>
-                    <span>&ensp;About</span>
-                </a>
-                <a href="/archives">
-                    <i class="fa-solid fa-box-archive"></i>
-                    <span>&ensp;Archives</span>
-                </a>
+                <div class="title" @click="showMenuItems = !showMenuItems">
+                    <i class="fa-solid fa-bars fa-fw"></i>
+                    <span>&emsp;为美好的世界献上问候</span>
+                </div>
+                <transition name="slide">
+                    <div class="items" v-show="showMenuItems">
+                        <a href="/">
+                            <div class="item">
+                                <div style="min-width: 20px; max-width: 50px; width: 10%">
+                                    <i class="fa-solid fa-house fa-fw"></i>
+                                </div>
+                                <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                            </div>
+                        </a>
+                        <a href="/about">
+                            <div class="item">
+                                <div style="min-width: 20px; max-width: 50px; width: 10%">
+                                    <i class="fa-solid fa-id-card fa-fw"></i>
+                                </div>
+                                <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                            </div>
+                        </a>
+                        <a href="/archives">
+                            <div class="item">
+                                <div style="min-width: 20px; max-width: 50px; width: 10%">
+                                    <i class="fa-solid fa-box-archive fa-fw"></i>
+                                </div>
+                                <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                            </div>
+                        </a>
+                    </div>
+                </transition>
             </nav>
         </div>
+        <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
         <div class="article">
             <div class="content" v-pre>
                 <h1>About</h1>
                 <h1>Hi there 👋</h1>
-                <p>龙虾养殖户</p>
-                <p><br></p>
                 <p>在这里写一些关于自己的介绍内容...</p>
             </div>
         </div>
