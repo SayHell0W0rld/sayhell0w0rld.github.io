@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>Tags: 网络安全 | 为美好的世界献上问候</title>
+    <meta name="author" content="龙虾养殖户" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="AI, Agent, 安全, 技术" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.webp" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>为美好的世界献上问候</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;为美好的世界献上问候</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                
+                
+                
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div id="archives">
+    
+    <div class="categories-tags">
+        
+        
+        
+        <span>
+            <a href="/tags/AI/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                AI
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Stable-Diffusion/" style="background: #ffa2c4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Stable Diffusion
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                图像生成
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                信息安全
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Matlab/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Matlab
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E9%9A%90%E5%86%99%E6%9C%AF/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                隐写术
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Transformer/" style="background: #ffa2c4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Transformer
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                深度学习
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E8%AE%BA%E6%96%87/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                论文
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/SpringBoot/" style="background: #ffa2c4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                SpringBoot
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Vue/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Vue
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E6%AF%95%E8%AE%BE/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                毕设
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Python/" style="background: #ffa2c4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Python
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E7%88%AC%E8%99%AB/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                爬虫
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%8F%8D%E7%88%AC/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                反爬
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E6%97%A0%E4%BA%BA%E6%9C%BA/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                无人机
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Remote-ID/" style="background: #ffa2c4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Remote ID
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                协议
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/GitHub-Copilot/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                GitHub Copilot
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/M365/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                M365
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/DeepSeek/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                DeepSeek
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E6%8E%A8%E7%90%86%E6%A8%A1%E5%9E%8B/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                推理模型
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/R1/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                R1
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/TLS/" style="background: #ffa2c4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                TLS
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                密码学
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%AE%89%E5%85%A8/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                安全
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/RAG/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                RAG
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/LangChain/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                LangChain
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/ChromaDB/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                ChromaDB
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/EN-18031/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                EN 18031
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/RED/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                RED
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                网络安全
+            </a>
+        </span>
+        
+        
+        
+        
+        
+        <span>
+            <a href="/tags/Coze/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Coze
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%B7%A5%E4%BD%9C%E6%B5%81/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                工作流
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/RSS/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                RSS
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/LoRA/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                LoRA
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%BE%AE%E8%B0%83/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                微调
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Colab/" style="background: #ffa2c4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Colab
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/CRA/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                CRA
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E6%AC%A7%E7%9B%9F%E6%B3%95%E8%A7%84/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                欧盟法规
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Hermes-Agent/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Hermes Agent
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                记忆系统
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/OpenClaw/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                OpenClaw
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/AI-Agent/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                AI Agent
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%B7%A5%E5%85%B7/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                工具
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Anthropic/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Anthropic
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Agent/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Agent
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/Claude-Code/" style="background: #ffa2c4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                Claude Code
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/AI%E7%BC%96%E7%A8%8B/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                AI编程
+            </a>
+        </span>
+        
+        
+    </div>
+    
+    <div class="timeline">
+        <div class="timeline-tail"></div>
+        <div class="timeline-content">
+            <div class="item-time">2025/9/15</div>
+            <a href="/2025/09/15/2025-09-15-CRA/">
+                <h3>欧盟CRA法规解读：你的产品需要满足哪些网络安全要求？</h3>
+            </a>
+            <div class="info">
+                
+                <span class="category">
+                    <a href="/categories/%E6%8A%80%E6%9C%AF%E7%A0%94%E7%A9%B6/">
+                        <span class="icon">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </span>
+                        技术研究
+                    </a>
+                </span>
+                
+                
+                <span class="tags">
+                    <span class="icon">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </span>
+                    
+                    
+                    <span class="tag">
+                        
+                        <a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="color: #03a9f4">
+                            网络安全
+                        </a>
+                    </span>
+                    
+                    <span class="tag">
+                        
+                        <a href="/tags/CRA/" style="color: #ffa2c4">
+                            CRA
+                        </a>
+                    </span>
+                    
+                    <span class="tag">
+                        
+                        <a href="/tags/%E6%AC%A7%E7%9B%9F%E6%B3%95%E8%A7%84/" style="color: #00bcd4">
+                            欧盟法规
+                        </a>
+                    </span>
+                    
+                </span>
+                
+            </div>
+        </div>
+    </div>
+    
+    <div class="timeline">
+        <div class="timeline-tail"></div>
+        <div class="timeline-content">
+            <div class="item-time">2024/10/28</div>
+            <a href="/2024/10/28/2024-10-28-EN18031/">
+                <h3>EN 18031：欧盟无线电设备网络安全标准解读</h3>
+            </a>
+            <div class="info">
+                
+                <span class="category">
+                    <a href="/categories/%E6%8A%80%E6%9C%AF%E7%A0%94%E7%A9%B6/">
+                        <span class="icon">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </span>
+                        技术研究
+                    </a>
+                </span>
+                
+                
+                <span class="tags">
+                    <span class="icon">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </span>
+                    
+                    
+                    <span class="tag">
+                        
+                        <a href="/tags/EN-18031/" style="color: #03a9f4">
+                            EN 18031
+                        </a>
+                    </span>
+                    
+                    <span class="tag">
+                        
+                        <a href="/tags/RED/" style="color: #ff7d73">
+                            RED
+                        </a>
+                    </span>
+                    
+                    <span class="tag">
+                        
+                        <a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="color: #00bcd4">
+                            网络安全
+                        </a>
+                    </span>
+                    
+                </span>
+                
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2026 为美好的世界献上问候
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;SayHelloWorld
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+</body>
+</html>

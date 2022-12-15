@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>重新捡起Python爬虫 | 为美好的世界献上问候</title>
+    <meta name="author" content="龙虾养殖户" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="AI, Agent, 安全, 技术" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.webp" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>为美好的世界献上问候</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;为美好的世界献上问候</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                
+                
+                
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>重新捡起Python爬虫</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/2/14
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                技术实践
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Python/" style="color: #ffa2c4">
+                    Python
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E7%88%AC%E8%99%AB/" style="color: #ff7d73">
+                    爬虫
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%8F%8D%E7%88%AC/" style="color: #00a596">
+                    反爬
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <p>有段时间没写爬虫了，最近想重新捡起来。起因是想爬一下QQ空间的历史说说，做一些数据分析的练习。翻了翻以前的代码，发现很多库的用法已经变了，干脆从头梳理一遍。</p>
+<h2 id="先说框架选型"><a href="#先说框架选型" class="headerlink" title="先说框架选型"></a>先说框架选型</h2><p>Python爬虫这块，主流的工具就那么几个：requests + BeautifulSoup、Scrapy、Selenium。三者定位不同，选哪个取决于你要爬什么。</p>
+<h3 id="requests-BeautifulSoup"><a href="#requests-BeautifulSoup" class="headerlink" title="requests + BeautifulSoup"></a>requests + BeautifulSoup</h3><p>最轻量的组合。requests负责发HTTP请求，BeautifulSoup负责解析HTML。适合爬静态页面，或者你能拿到API接口的场景。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;https://example.com&quot;</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36&quot;</span></span><br><span class="line">&#125;</span><br><span class="line">resp = requests.get(url, headers=headers)</span><br><span class="line">soup = BeautifulSoup(resp.text, <span class="string">&quot;lxml&quot;</span>)</span><br><span class="line">title = soup.find(<span class="string">&quot;title&quot;</span>).text</span><br></pre></td></tr></table></figure>
+
+<p>几行代码就能跑起来，调试也方便。我的经验是，大多数爬虫需求，先用requests试试，很多时候页面直接给你返回HTML，根本不需要渲染JS。</p>
+<h3 id="Scrapy"><a href="#Scrapy" class="headerlink" title="Scrapy"></a>Scrapy</h3><p>Scrapy是个完整的爬虫框架，自带调度器、中间件、管道这些东西。优点是快，异步架构处理大量页面效率很高。缺点是项目结构比较重，写个简单的爬虫反而不如直接用requests方便。</p>
+<p>我之前爬过一个小说网站，用Scrapy写了完整的spider，包括去重、限速、数据导出CSV，跑起来确实舒服。但如果是像QQ空间这种需要登录、有复杂反爬机制的，Scrapy本身的登录处理不太方便，通常还是要配合Selenium用。</p>
+<h3 id="Selenium-Playwright"><a href="#Selenium-Playwright" class="headerlink" title="Selenium &#x2F; Playwright"></a>Selenium &#x2F; Playwright</h3><p>这类工具的核心能力是操控真实浏览器。页面是JS动态渲染的、需要登录的、有验证码的——这些场景用Selenium或Playwright比较合适。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome()</span><br><span class="line">driver.get(<span class="string">&quot;https://example.com&quot;</span>)</span><br><span class="line"><span class="comment"># 等待页面加载</span></span><br><span class="line">element = driver.find_element(<span class="string">&quot;css selector&quot;</span>, <span class="string">&quot;.data-content&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(element.text)</span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+<p>缺点也明显：慢。我测试过同一个页面，requests抓取大概3秒，Selenium要40多秒。因为它要启动一个完整的浏览器进程，等JS执行完再拿DOM。</p>
+<h3 id="我的选择"><a href="#我的选择" class="headerlink" title="我的选择"></a>我的选择</h3><p>日常爬虫：requests + BeautifulSoup，够用就行。<br>大规模批量采集：Scrapy，性能好。<br>需要登录&#x2F;JS渲染：Selenium或Playwright。</p>
+<p>实际上很多时候是组合使用的。比如我这次爬QQ空间，就是Selenium登录拿cookie，然后用requests去请求数据接口。</p>
+<h2 id="实战：QQ空间爬虫"><a href="#实战：QQ空间爬虫" class="headerlink" title="实战：QQ空间爬虫"></a>实战：QQ空间爬虫</h2><p>QQ空间是个挺好的练习目标，因为它基本集齐了爬虫会遇到的所有难题。</p>
+<h3 id="第一步：登录"><a href="#第一步：登录" class="headerlink" title="第一步：登录"></a>第一步：登录</h3><p>QQ空间的登录页面嵌在一个iframe里，而且有滑块验证。纯requests是搞不定的，直接上Selenium。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome()</span><br><span class="line">driver.get(<span class="string">&quot;https://user.qzone.qq.com/&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># QQ空间登录页嵌在iframe里，要切换进去</span></span><br><span class="line">driver.switch_to.frame(<span class="string">&quot;login_frame&quot;</span>)</span><br><span class="line">driver.find_element(By.ID, <span class="string">&quot;switcher_plogin&quot;</span>).click()</span><br><span class="line">time.sleep(<span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line">driver.find_element(By.ID, <span class="string">&quot;u&quot;</span>).send_keys(<span class="string">&quot;你的QQ号&quot;</span>)</span><br><span class="line">driver.find_element(By.ID, <span class="string">&quot;p&quot;</span>).send_keys(<span class="string">&quot;你的密码&quot;</span>)</span><br><span class="line">driver.find_element(By.ID, <span class="string">&quot;login_button&quot;</span>).click()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 等待登录完成</span></span><br><span class="line">time.sleep(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这里有个坑：登录成功后页面会跳转，但Selenium不会自动等待。我一开始没加sleep，直接去取cookie，结果取到的是登录前的空cookie。加了显式等待之后才稳定下来。</p>
+<h3 id="第二步：获取g-tk"><a href="#第二步：获取g-tk" class="headerlink" title="第二步：获取g_tk"></a>第二步：获取g_tk</h3><p>QQ空间的API请求需要一个叫g_tk的参数，它是从cookie里的p_skey值经过一个哈希算法算出来的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_g_tk</span>(<span class="params">p_skey</span>):</span><br><span class="line">    hashes = <span class="number">5381</span></span><br><span class="line">    <span class="keyword">for</span> letter <span class="keyword">in</span> p_skey:</span><br><span class="line">        hashes += (hashes &lt;&lt; <span class="number">5</span>) + <span class="built_in">ord</span>(letter)</span><br><span class="line">    <span class="keyword">return</span> hashes &amp; <span class="number">0x7fffffff</span></span><br></pre></td></tr></table></figure>
+
+<p>这个算法本身不难，难的是你知道它存在。我一开始根本不知道有这个参数，请求一直返回403，debug了挺久。后来搜了相关资料才发现，QQ空间的请求必须带上g_tk。</p>
+<p>除了g_tk，还需要从页面源码里提取qzonetoken。这个token藏在一段内联JS代码里，用正则可以拿到。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">html = driver.page_source</span><br><span class="line">pattern = <span class="string">r&#x27;window\.g_qzonetoken = \(function\(\)\&#123; try\&#123;return \&quot;(.*)\&quot;;&#x27;</span></span><br><span class="line"><span class="keyword">match</span> = re.findall(pattern, html)</span><br><span class="line">qzonetoken = <span class="keyword">match</span>[<span class="number">0</span>] <span class="keyword">if</span> <span class="keyword">match</span> <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="第三步：请求数据接口"><a href="#第三步：请求数据接口" class="headerlink" title="第三步：请求数据接口"></a>第三步：请求数据接口</h3><p>拿到cookie、g_tk和qzonetoken之后，就可以用requests去请求QQ空间的数据API了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">session = requests.Session()</span><br><span class="line"><span class="comment"># 把Selenium拿到的cookie注入requests</span></span><br><span class="line"><span class="keyword">for</span> cookie <span class="keyword">in</span> driver.get_cookies():</span><br><span class="line">    session.cookies.<span class="built_in">set</span>(cookie[<span class="string">&quot;name&quot;</span>], cookie[<span class="string">&quot;value&quot;</span>])</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;https://user.qzone.qq.com/proxy/domain/m.qzone.qq.com/cgi-bin/new/get_msgb&quot;</span></span><br><span class="line">params = &#123;</span><br><span class="line">    <span class="string">&quot;uin&quot;</span>: <span class="string">&quot;目标QQ号&quot;</span>,</span><br><span class="line">    <span class="string">&quot;hostUin&quot;</span>: <span class="string">&quot;目标QQ号&quot;</span>,</span><br><span class="line">    <span class="string">&quot;start&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;s&quot;</span>: <span class="string">&quot;0.1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;format&quot;</span>: <span class="string">&quot;jsonp&quot;</span>,</span><br><span class="line">    <span class="string">&quot;num&quot;</span>: <span class="number">10</span>,</span><br><span class="line">    <span class="string">&quot;inCharset&quot;</span>: <span class="string">&quot;utf-8&quot;</span>,</span><br><span class="line">    <span class="string">&quot;outCharset&quot;</span>: <span class="string">&quot;utf-8&quot;</span>,</span><br><span class="line">    <span class="string">&quot;g_tk&quot;</span>: g_tk,</span><br><span class="line">    <span class="string">&quot;qzonetoken&quot;</span>: qzonetoken,</span><br><span class="line">&#125;</span><br><span class="line">resp = session.get(url, params=params)</span><br></pre></td></tr></table></figure>
+
+<p>返回的是JSONP格式的JSON数据，需要去掉回调函数的包装才能解析。</p>
+<h3 id="第四步：处理反爬"><a href="#第四步：处理反爬" class="headerlink" title="第四步：处理反爬"></a>第四步：处理反爬</h3><p>QQ空间的反爬主要体现在几个方面：</p>
+<p><strong>登录验证</strong>：滑块验证，Selenium能处理但需要手动过一次，之后cookie就保存了。</p>
+<p><strong>请求频率限制</strong>：请求太快会被封。我一开始没加延迟，跑了没多久就被限制了。后来加了随机的sleep，1到3秒随机间隔。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">time.sleep(random.uniform(<span class="number">1</span>, <span class="number">3</span>))</span><br></pre></td></tr></table></figure>
+
+<p><strong>动态加载</strong>：QQ空间的内容是通过AJAX接口加载的，不是直接写在HTML里的。所以解析HTML是拿不到内容的，必须找到API接口。</p>
+<p><strong>JSONP包装</strong>：返回的数据被包在回调函数里，需要截取。我的处理方式是取掉前10个字符和后3个字符（去掉<code>callback(</code>和<code>);</code>）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">text = resp.text[<span class="number">10</span>:-<span class="number">3</span>]</span><br><span class="line">data = json.loads(text)</span><br></pre></td></tr></table></figure>
+
+<h3 id="第五步：数据清洗"><a href="#第五步：数据清洗" class="headerlink" title="第五步：数据清洗"></a>第五步：数据清洗</h3><p>留言板的数据是HTML格式的，里面混着各种标签、script、style。需要写一个清洗函数把HTML标签去掉。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">clean_html</span>(<span class="params">html_str</span>):</span><br><span class="line">    <span class="comment"># 去掉script和style</span></span><br><span class="line">    html_str = re.sub(<span class="string">r&#x27;&lt;script.*?&lt;/script&gt;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, html_str, flags=re.S)</span><br><span class="line">    html_str = re.sub(<span class="string">r&#x27;&lt;style.*?&lt;/style&gt;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, html_str, flags=re.S)</span><br><span class="line">    <span class="comment"># 去掉HTML标签</span></span><br><span class="line">    html_str = re.sub(<span class="string">r&#x27;&lt;.*?&gt;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, html_str)</span><br><span class="line">    <span class="comment"># 处理HTML实体</span></span><br><span class="line">    html_str = html_str.replace(<span class="string">&#x27;&amp;nbsp;&#x27;</span>, <span class="string">&#x27; &#x27;</span>)</span><br><span class="line">    html_str = html_str.replace(<span class="string">&#x27;&amp;lt;&#x27;</span>, <span class="string">&#x27;&lt;&#x27;</span>)</span><br><span class="line">    html_str = html_str.replace(<span class="string">&#x27;&amp;gt;&#x27;</span>, <span class="string">&#x27;&gt;&#x27;</span>)</span><br><span class="line">    html_str = html_str.replace(<span class="string">&#x27;&amp;amp;&#x27;</span>, <span class="string">&#x27;&amp;&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> html_str.strip()</span><br></pre></td></tr></table></figure>
+
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>总结几个值得注意的地方：</p>
+<ol>
+<li><p><strong>Cookie过期</strong>：QQ空间的cookie有效期不长，跑一会儿就要重新登录。我后来写了个检测机制，发现请求失败就自动重新登录。</p>
+</li>
+<li><p><strong>iframe切换</strong>：Selenium操作QQ空间必须先切换到iframe里，不然找不到登录元素。操作完再切回来。</p>
+</li>
+<li><p><strong>编码问题</strong>：中文内容经常出现乱码，requests返回的encoding有时候不对，手动设置<code>response.encoding = &quot;utf-8&quot;</code>能解决大部分问题。</p>
+</li>
+<li><p><strong>页面结构变了</strong>：QQ空间的HTML结构时不时会变，之前写的选择器过一段时间就失效了。所以解析逻辑最好写得宽泛一点，别依赖太细的层级结构。</p>
+</li>
+<li><p><strong>robots.txt</strong>：虽然QQ空间的robots.txt没有明确禁止爬取，但还是要控制频率，不要给别人服务器造成负担。</p>
+</li>
+</ol>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>重新写了一遍爬虫，发现和几年前比，基本原理没变，但工具和生态变化不少。requests依然好用，Selenium从2.x升级到了4.x，Playwright成了新的选择，Scrapy也出了很多插件。</p>
+<p>对于QQ空间这种有复杂反爬的站点，单靠一个库是搞不定的。Selenium解决登录，requests解决请求效率，正则+JSON解析解决数据提取，三者配合才能跑通。</p>
+<p>下次打算试试Playwright替代Selenium，据说在等待策略和性能上都比Selenium好一些。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2026 为美好的世界献上问候
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;SayHelloWorld
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

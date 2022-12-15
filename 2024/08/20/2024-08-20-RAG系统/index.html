@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>本地RAG系统搭建：LangChain + ChromaDB 实战 | 为美好的世界献上问候</title>
+    <meta name="author" content="龙虾养殖户" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="AI, Agent, 安全, 技术" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.webp" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>为美好的世界献上问候</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;为美好的世界献上问候</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                
+                
+                
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>本地RAG系统搭建：LangChain + ChromaDB 实战</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/8/20
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                技术实践
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/RAG/" style="color: #ffa2c4">
+                    RAG
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/LangChain/" style="color: #00a596">
+                    LangChain
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/ChromaDB/" style="color: #ffa2c4">
+                    ChromaDB
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <p>最近搭了一个本地跑的 RAG 系统，技术栈是 LangChain + ChromaDB。记录一下搭建过程、搜索原理和调参经验，给想自己动手搭的人一个参考。</p>
+<h2 id="先说背景"><a href="#先说背景" class="headerlink" title="先说背景"></a>先说背景</h2><p>大语言模型（LLM）的训练数据是有截止日期的，也不可能包含你的私有数据。比如我有一批简历，想让模型根据简历内容回答问题——“这个候选人会 Python 吗？””哪几个人有 3 年以上经验？”——直接问 LLM 肯定不行，它没见过这些文件。</p>
+<p>RAG（Retrieval-Augmented Generation，检索增强生成）的做法是：先把文档切块、编码成向量存进向量数据库，用户提问时先检索相关内容，再把这些内容拼进 prompt 让 LLM 回答。这样 LLM 就能基于你的私有数据来生成答案了。</p>
+<p>整个流程分两个阶段：</p>
+<ol>
+<li><strong>离线索引阶段</strong>：加载文档 → 切分成 chunk → 用 embedding 模型编码成向量 → 存入 ChromaDB</li>
+<li><strong>在线查询阶段</strong>：用户提问 → query 也编码成向量 → 向量搜索找到最相关的 chunk → 拼成 prompt → 调用 LLM 生成回答</li>
+</ol>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>我用的环境：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install langchain langchain-community chromadb sentence-transformers ollama</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>LangChain</strong>：负责串联整个 RAG pipeline</li>
+<li><strong>ChromaDB</strong>：本地向量数据库，纯 Python 实现，不需要额外部署服务</li>
+<li><strong>sentence-transformers</strong>：本地 embedding 模型，不需要调 API</li>
+<li><strong>Ollama</strong>：本地跑 LLM（比如 llama3.1:8b），也可以换成任何你习惯的 LLM</li>
+</ul>
+<p>如果你用 OpenAI 的 embedding 和 LLM，把 <code>sentence-transformers</code> 换成 <code>openai</code> 就行，ChromaDB 那边 LangChain 有现成的集成。</p>
+<h2 id="数据加载与切分"><a href="#数据加载与切分" class="headerlink" title="数据加载与切分"></a>数据加载与切分</h2><p>先加载文档。LangChain 支持 PDF、TXT、Markdown 等格式，简历一般是 PDF：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_community.document_loaders <span class="keyword">import</span> PyPDFLoader</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载单个简历</span></span><br><span class="line">loader = PyPDFLoader(<span class="string">&quot;resume_001.pdf&quot;</span>)</span><br><span class="line">docs = loader.load()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 批量加载整个目录</span></span><br><span class="line"><span class="keyword">from</span> langchain_community.document_loaders <span class="keyword">import</span> DirectoryLoader</span><br><span class="line"></span><br><span class="line">loader = DirectoryLoader(<span class="string">&quot;./resumes/&quot;</span>, glob=<span class="string">&quot;*.pdf&quot;</span>, loader_cls=PyPDFLoader)</span><br><span class="line">docs = loader.load()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;共加载 <span class="subst">&#123;<span class="built_in">len</span>(docs)&#125;</span> 页文档&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>然后切分。这是整个 RAG 系统里最关键的一步——切得好不好，直接决定检索质量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> RecursiveCharacterTextSplitter</span><br><span class="line"></span><br><span class="line">text_splitter = RecursiveCharacterTextSplitter(</span><br><span class="line">    chunk_size=<span class="number">800</span>,       <span class="comment"># 每个 chunk 最大 800 字符</span></span><br><span class="line">    chunk_overlap=<span class="number">200</span>,    <span class="comment"># 相邻 chunk 重叠 200 字符</span></span><br><span class="line">    separators=[<span class="string">&quot;\n\n&quot;</span>, <span class="string">&quot;\n&quot;</span>, <span class="string">&quot;。&quot;</span>, <span class="string">&quot;；&quot;</span>, <span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>]</span><br><span class="line">)</span><br><span class="line">chunks = text_splitter.split_documents(docs)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;共生成 <span class="subst">&#123;<span class="built_in">len</span>(chunks)&#125;</span> 个 chunk&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么要切分？</strong> 两个原因：</p>
+<ol>
+<li>Embedding 模型对输入长度有限制，太长会截断</li>
+<li>检索粒度太粗的话，一大段无关内容会稀释相关信息，LLM 拿到的上下文质量变差</li>
+</ol>
+<p><strong>chunk_size 和 chunk_overlap 怎么选？</strong> 我后面会详细说。</p>
+<h2 id="Embedding-与向量存储"><a href="#Embedding-与向量存储" class="headerlink" title="Embedding 与向量存储"></a>Embedding 与向量存储</h2><p>切分完成后，用 embedding 模型把每个 chunk 编码成向量，存入 ChromaDB：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_community.vectorstores <span class="keyword">import</span> Chroma</span><br><span class="line"><span class="keyword">from</span> langchain_community.embeddings <span class="keyword">import</span> OllamaEmbeddings</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用 Ollama 跑本地 embedding</span></span><br><span class="line">embedding = OllamaEmbeddings(model=<span class="string">&quot;nomic-embed-text&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存入 ChromaDB（首次创建，自动持久化）</span></span><br><span class="line">vectorstore = Chroma.from_documents(</span><br><span class="line">    documents=chunks,</span><br><span class="line">    embedding=embedding,</span><br><span class="line">    persist_directory=<span class="string">&quot;./chroma_db&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>ChromaDB 会把向量和原始文本一起存在本地 <code>./chroma_db</code> 目录。下次启动不用重新 embedding，直接加载：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vectorstore = Chroma(</span><br><span class="line">    persist_directory=<span class="string">&quot;./chroma_db&quot;</span>,</span><br><span class="line">    embedding_function=embedding</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>这个持久化机制挺方便，上万份简历编码一次就够了，后面查询都是毫秒级。</p>
+<h2 id="检索：向量搜索是怎么工作的"><a href="#检索：向量搜索是怎么工作的" class="headerlink" title="检索：向量搜索是怎么工作的"></a>检索：向量搜索是怎么工作的</h2><p>RAG 的核心在”Retrieval”——怎么从一堆 chunk 里找到和问题最相关的那几条。</p>
+<h3 id="向量搜索（Dense-Search）"><a href="#向量搜索（Dense-Search）" class="headerlink" title="向量搜索（Dense Search）"></a>向量搜索（Dense Search）</h3><p>embedding 模型把文本编码成一个低维稠密向量（比如 nomic-embed-text 输出 768 维）。向量之间的距离（通常是 cosine similarity）代表语义相似度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 手动测试语义搜索</span></span><br><span class="line">results = vectorstore.similarity_search(<span class="string">&quot;会 Python 的候选人&quot;</span>, k=<span class="number">3</span>)</span><br><span class="line"><span class="keyword">for</span> doc <span class="keyword">in</span> results:</span><br><span class="line">    <span class="built_in">print</span>(doc.page_content[:<span class="number">100</span>])</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;---&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>为什么叫”语义搜索”？因为它的比较不是基于关键词匹配，而是基于含义。比如你搜”编程语言经验”，即使用的是”Python”这个词出现频率不高的 chunk，只要那个 chunk 在语义上和”编程语言”相关，也能被检索到。</p>
+<h3 id="Sparse-Search（关键词搜索）"><a href="#Sparse-Search（关键词搜索）" class="headerlink" title="Sparse Search（关键词搜索）"></a>Sparse Search（关键词搜索）</h3><p>传统的关键词搜索（如 BM25）是另一种方式。它基于词频统计，精确匹配关键词。</p>
+<p>两者对比：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Dense Search（向量搜索）</th>
+<th>Sparse Search（关键词搜索）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>匹配方式</td>
+<td>语义相似度（cosine）</td>
+<td>关键词词频（TF-IDF）</td>
+</tr>
+<tr>
+<td>处理同义词</td>
+<td>好，”编程语言”能匹配”Python”</td>
+<td>差，必须精确命中</td>
+</tr>
+<tr>
+<td>处理精确术语</td>
+<td>一般，可能漏掉专有名词</td>
+<td>好，”etcd server.key”精确匹配</td>
+</tr>
+<tr>
+<td>计算速度</td>
+<td>向量计算，稍慢</td>
+<td>倒排索引，很快</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>自然语言问题、模糊查询</td>
+<td>精确技术术语、编号搜索</td>
+</tr>
+</tbody></table>
+<p>在我的简历筛选场景中，大部分查询是自然语言（”有机器学习经验的人”），用 Dense Search 效果更好。但有些查询是精确术语（”要求 CKA 认证”），Dense Search 可能漏掉。实际使用中可以两种结合。</p>
+<h3 id="LangChain-中的检索配置"><a href="#LangChain-中的检索配置" class="headerlink" title="LangChain 中的检索配置"></a>LangChain 中的检索配置</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">retriever = vectorstore.as_retriever(</span><br><span class="line">    search_type=<span class="string">&quot;similarity&quot;</span>,   <span class="comment"># 默认 cosine similarity</span></span><br><span class="line">    search_kwargs=&#123;<span class="string">&quot;k&quot;</span>: <span class="number">5</span>&#125;      <span class="comment"># 返回 top-5 结果</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>LangChain 支持几种 search_type：</p>
+<ul>
+<li><strong>similarity</strong>：默认，返回最相似的 k 个 chunk</li>
+<li><strong>mmr</strong>（Maximal Marginal Relevance）：在相关性基础上增加多样性，避免返回重复内容</li>
+<li><strong>similarity_score_threshold</strong>：只返回超过阈值的结果</li>
+</ul>
+<p>对于简历筛选这种场景，我用 <code>similarity</code> + 合理的 k 值就够了。</p>
+<h2 id="生成回答"><a href="#生成回答" class="headerlink" title="生成回答"></a>生成回答</h2><p>检索到相关 chunk 后，把它们拼进 prompt 让 LLM 生成回答：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_community.chat_models <span class="keyword">import</span> ChatOllama</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> RetrievalQA</span><br><span class="line"></span><br><span class="line">llm = ChatOllama(model=<span class="string">&quot;llama3.1:8b&quot;</span>, temperature=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">qa_chain = RetrievalQA.from_chain_type(</span><br><span class="line">    llm=llm,</span><br><span class="line">    chain_type=<span class="string">&quot;stuff&quot;</span>,       <span class="comment"># 把所有检索结果拼接成一个 prompt</span></span><br><span class="line">    retriever=retriever,</span><br><span class="line">    return_source_documents=<span class="literal">True</span>   <span class="comment"># 同时返回引用的文档来源</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提问</span></span><br><span class="line">result = qa_chain.invoke(&#123;<span class="string">&quot;query&quot;</span>: <span class="string">&quot;这些候选人中有谁会 Rust 吗？&quot;</span>&#125;)</span><br><span class="line"><span class="built_in">print</span>(result[<span class="string">&quot;result&quot;</span>])</span><br></pre></td></tr></table></figure>
+
+<p><code>chain_type=&quot;stuff&quot;</code> 是最简单的策略：把检索到的 chunk 直接拼接在一起塞进 prompt。如果检索结果太多，可能会超过 LLM 的上下文长度限制，这时候可以换用 <code>map_reduce</code> 或 <code>refine</code> 等策略。</p>
+<p>我实际测试下来，k&#x3D;3~5 比较合适。太少可能漏掉信息，太多会引入噪声。</p>
+<h2 id="调参技巧"><a href="#调参技巧" class="headerlink" title="调参技巧"></a>调参技巧</h2><p>搭起来容易，调好需要耐心。我把遇到的问题整理一下：</p>
+<h3 id="1-chunk-size"><a href="#1-chunk-size" class="headerlink" title="1. chunk_size"></a>1. chunk_size</h3><p>这是影响最大的参数。</p>
+<ul>
+<li><strong>太小</strong>（&lt;300 字符）：chunk 太碎，丢失上下文，LLM 读到的每条信息都不完整</li>
+<li><strong>太大</strong>（&gt;2000 字符）：chunk 太粗，相关信息和不相关信息混在一起，检索精度下降</li>
+<li><strong>经验值</strong>：简历场景下 600<del>1000 字符比较合适。一般文档 800</del>1200 是个不错的起点</li>
+</ul>
+<h3 id="2-chunk-overlap"><a href="#2-chunk-overlap" class="headerlink" title="2. chunk_overlap"></a>2. chunk_overlap</h3><p>重叠区域让相邻 chunk 的语义连续，避免信息在边界处断裂。</p>
+<ul>
+<li><strong>太小</strong>（&lt;50）：边界处信息丢失严重</li>
+<li><strong>太大</strong>（&gt;chunk_size 的 30%）：冗余过多，浪费存储和计算</li>
+<li><strong>经验值</strong>：chunk_size 的 15%<del>25%，比如 chunk_size&#x3D;800 时 overlap&#x3D;150</del>200</li>
+</ul>
+<h3 id="3-k-值（检索数量）"><a href="#3-k-值（检索数量）" class="headerlink" title="3. k 值（检索数量）"></a>3. k 值（检索数量）</h3><ul>
+<li><strong>k&#x3D;3</strong>：适合简单查询，信息量少</li>
+<li><strong>k&#x3D;5~8</strong>：适合复杂查询，需要多条信息综合回答</li>
+<li><strong>k 太大</strong>：引入噪声，LLM 回答反而变差</li>
+<li><strong>我自己的做法</strong>：先设 k&#x3D;5，根据回答质量微调</li>
+</ul>
+<h3 id="4-Embedding-模型选择"><a href="#4-Embedding-模型选择" class="headerlink" title="4. Embedding 模型选择"></a>4. Embedding 模型选择</h3><p>不同 embedding 模型对检索质量影响很大：</p>
+<ul>
+<li><strong>nomic-embed-text</strong>：开源，本地跑，质量不错，推荐入门</li>
+<li><strong>bge-large-zh-v1.5</strong>：中文场景效果更好</li>
+<li><strong>text-embedding-3-small</strong>（OpenAI）：质量高，但需要 API key 和费用</li>
+<li><strong>sentence-transformers&#x2F;all-MiniLM-L6-v2</strong>：轻量，适合英文场景</li>
+</ul>
+<p>简历筛选涉及中文，我用的是 bge-large-zh-v1.5，效果比 nomic-embed-text 好一些。</p>
+<h3 id="5-LLM-的-temperature"><a href="#5-LLM-的-temperature" class="headerlink" title="5. LLM 的 temperature"></a>5. LLM 的 temperature</h3><p>temperature&#x3D;0 让回答确定性更强，适合需要精确引用的场景。temperature 越高回答越”灵活”，但可能编造不存在的信息。RAG 场景一般设 0 或 0.1。</p>
+<h2 id="完整代码示例"><a href="#完整代码示例" class="headerlink" title="完整代码示例"></a>完整代码示例</h2><p>把上面的步骤串起来，一个最小可运行的 RAG 系统大概是这样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> langchain_community.document_loaders <span class="keyword">import</span> DirectoryLoader, PyPDFLoader</span><br><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> RecursiveCharacterTextSplitter</span><br><span class="line"><span class="keyword">from</span> langchain_community.vectorstores <span class="keyword">import</span> Chroma</span><br><span class="line"><span class="keyword">from</span> langchain_community.embeddings <span class="keyword">import</span> OllamaEmbeddings</span><br><span class="line"><span class="keyword">from</span> langchain_community.chat_models <span class="keyword">import</span> ChatOllama</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> RetrievalQA</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 加载文档</span></span><br><span class="line">loader = DirectoryLoader(<span class="string">&quot;./resumes/&quot;</span>, glob=<span class="string">&quot;*.pdf&quot;</span>, loader_cls=PyPDFLoader)</span><br><span class="line">docs = loader.load()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;加载了 <span class="subst">&#123;<span class="built_in">len</span>(docs)&#125;</span> 页&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 切分</span></span><br><span class="line">splitter = RecursiveCharacterTextSplitter(</span><br><span class="line">    chunk_size=<span class="number">800</span>, chunk_overlap=<span class="number">200</span>,</span><br><span class="line">    separators=[<span class="string">&quot;\n\n&quot;</span>, <span class="string">&quot;\n&quot;</span>, <span class="string">&quot;。&quot;</span>, <span class="string">&quot;；&quot;</span>, <span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>]</span><br><span class="line">)</span><br><span class="line">chunks = splitter.split_documents(docs)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;生成 <span class="subst">&#123;<span class="built_in">len</span>(chunks)&#125;</span> 个 chunk&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Embedding + 向量存储</span></span><br><span class="line">embedding = OllamaEmbeddings(model=<span class="string">&quot;nomic-embed-text&quot;</span>)</span><br><span class="line">vectorstore = Chroma.from_documents(</span><br><span class="line">    chunks, embedding, persist_directory=<span class="string">&quot;./chroma_db&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 构建 QA 链</span></span><br><span class="line">retriever = vectorstore.as_retriever(search_kwargs=&#123;<span class="string">&quot;k&quot;</span>: <span class="number">5</span>&#125;)</span><br><span class="line">llm = ChatOllama(model=<span class="string">&quot;llama3.1:8b&quot;</span>, temperature=<span class="number">0</span>)</span><br><span class="line">qa_chain = RetrievalQA.from_chain_type(</span><br><span class="line">    llm=llm, chain_type=<span class="string">&quot;stuff&quot;</span>,</span><br><span class="line">    retriever=retriever, return_source_documents=<span class="literal">True</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 提问</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    query = <span class="built_in">input</span>(<span class="string">&quot;\n请输入问题（输入 q 退出）：&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> query.strip().lower() == <span class="string">&#x27;q&#x27;</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    result = qa_chain.invoke(&#123;<span class="string">&quot;query&quot;</span>: query&#125;)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;\n回答：<span class="subst">&#123;result[<span class="string">&#x27;result&#x27;</span>]&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\n引用来源：&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> doc <span class="keyword">in</span> result[<span class="string">&quot;source_documents&quot;</span>]:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;  - <span class="subst">&#123;doc.metadata.get(<span class="string">&#x27;source&#x27;</span>, <span class="string">&#x27;unknown&#x27;</span>)&#125;</span>: <span class="subst">&#123;doc.page_content[:<span class="number">80</span>]&#125;</span>...&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>搭下来的感受：RAG 系统的核心不在 LLM，而在数据处理和检索质量。embedding 模型选对、chunk 切好、k 值调对，回答质量就能到一个不错的水平。LLM 本身反而是最容易替换的部分。</p>
+<p>如果后续想继续优化，几个方向可以考虑：</p>
+<ul>
+<li><strong>混合检索</strong>：Dense Search + Sparse Search 结合，覆盖语义和精确匹配</li>
+<li><strong>Reranking</strong>：检索后再用 reranker 模型对结果重新排序</li>
+<li><strong>Query 改写</strong>：用户原始 query 不太适合检索时，先用 LLM 改写一下</li>
+<li><strong>Fine-tune embedding</strong>：用你的领域数据微调 embedding 模型，提升特定场景的检索效果</li>
+</ul>
+<p>这些属于进阶优化了，先把基础版跑通，再按需加。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2026 为美好的世界献上问候
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;SayHelloWorld
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

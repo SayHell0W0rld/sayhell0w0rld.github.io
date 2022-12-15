@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>LoRA微调实践：在Google Colab免费GPU上用中文维基百科微调大模型 | 为美好的世界献上问候</title>
+    <meta name="author" content="龙虾养殖户" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="AI, Agent, 安全, 技术" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.webp" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>为美好的世界献上问候</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;为美好的世界献上问候</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                
+                
+                
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>LoRA微调实践：在Google Colab免费GPU上用中文维基百科微调大模型</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/9/12
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                技术实践
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/LoRA/" style="color: #ffa2c4">
+                    LoRA
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%BE%AE%E8%B0%83/" style="color: #03a9f4">
+                    微调
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/Colab/" style="color: #00a596">
+                    Colab
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="为什么需要微调"><a href="#为什么需要微调" class="headerlink" title="为什么需要微调"></a>为什么需要微调</h2><p>预训练模型（如 LLaMA、Qwen、ChatGLM 等）在海量文本上学习了通用的语言知识，但这些知识是”泛化”的。当你想让模型在特定领域表现更好——比如回答中文百科知识、遵循特定格式、或者适配某个行业场景——预训练模型的表现往往不够用。</p>
+<p>全量微调（Full Fine-Tuning）是直接更新模型的所有参数。听起来很直接，但问题在于资源消耗。以 LLaMA-2-7B 为例：</p>
+<ul>
+<li>FP16 权重：14GB</li>
+<li>梯度：14GB</li>
+<li>AdamW 优化器状态：28GB</li>
+</ul>
+<p>仅训练状态就需要 56GB 以上的 GPU 显存。而 Google Colab 免费版提供的是 T4 GPU，显存只有 16GB。更不用说 70B 参数的模型需要 560GB，得上 8 张 A100。</p>
+<p>这就催生了参数高效微调（Parameter-Efficient Fine-Tuning, PEFT）的研究方向：能否只训练极少量的参数，就让模型学会新任务？LoRA 就是这个方向上最成功的方案之一。</p>
+<h2 id="LoRA-的核心原理"><a href="#LoRA-的核心原理" class="headerlink" title="LoRA 的核心原理"></a>LoRA 的核心原理</h2><p>LoRA 的全称是 Low-Rank Adaptation，低秩自适应。它的核心假设是：微调过程中的权重更新矩阵具有很低的”内在秩”（intrinsic rank）。</p>
+<p>具体来说，对于预训练模型中的一个权重矩阵 W₀ ∈ R^{d×k}，全量微调会学习一个更新 ΔW ∈ R^{d×k}。LoRA 的做法是将 ΔW 分解为两个低秩矩阵的乘积：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">W = W₀ + B × A</span><br><span class="line"># B ∈ R^&#123;d×r&#125;, A ∈ R^&#123;r×k&#125;</span><br><span class="line"># 可训练参数 = d×r + r×k = r×(d+k)</span><br><span class="line"># 当 r &lt;&lt; min(d, k) 时，参数量大幅减少</span><br></pre></td></tr></table></figure>
+
+<p>举个例子，LLaMA-7B 的注意力层 d&#x3D;k&#x3D;4096：</p>
+<ul>
+<li>全量微调：4096 × 4096 &#x3D; 16,777,216 参数</li>
+<li>LoRA (r&#x3D;16)：4096 × 16 + 16 × 4096 &#x3D; 131,072 参数</li>
+<li>压缩比：128 倍</li>
+</ul>
+<p>前向传播时，LoRA 的更新会叠加到原始权重上：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">h = W₀ @ x + (B @ A) @ x * (alpha / r)</span><br></pre></td></tr></table></figure>
+
+<p>其中 alpha&#x2F;r 是缩放因子，alpha 通常设为 2r。</p>
+<h2 id="LoRA-的关键超参数"><a href="#LoRA-的关键超参数" class="headerlink" title="LoRA 的关键超参数"></a>LoRA 的关键超参数</h2><table>
+<thead>
+<tr>
+<th>超参数</th>
+<th>推荐范围</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>rank (r)</td>
+<td>8 - 64</td>
+<td>控制表达能力与参数量。简单任务用 8-16，复杂任务用 32-64</td>
+</tr>
+<tr>
+<td>lora_alpha</td>
+<td>16 - 128</td>
+<td>控制更新幅度。通常设为 2r 或固定 16</td>
+</tr>
+<tr>
+<td>target_modules</td>
+<td>q,k,v,o 或全部线性层</td>
+<td>决定注入 LoRA 的层</td>
+</tr>
+<tr>
+<td>lora_dropout</td>
+<td>0.0 - 0.1</td>
+<td>正则化，小数据集建议 0.05-0.1</td>
+</tr>
+<tr>
+<td>learning_rate</td>
+<td>1e-4 - 3e-4</td>
+<td>比全量微调高 5-10 倍</td>
+</tr>
+</tbody></table>
+<h2 id="QLoRA：4-bit-量化-LoRA"><a href="#QLoRA：4-bit-量化-LoRA" class="headerlink" title="QLoRA：4-bit 量化 + LoRA"></a>QLoRA：4-bit 量化 + LoRA</h2><p>LoRA 减少了可训练参数，但冻结权重仍然需要加载到 GPU 显存中。LLaMA-7B 的冻结权重以 FP16 存放需要 14GB——这已经超出 Colab 免费版的安全范围。</p>
+<p>QLoRA（Quantized LoRA）解决了这个问题：将冻结的基础模型量化到 4-bit，然后在其上注入 LoRA adapter 进行 16-bit 精度的微调。</p>
+<p>QLoRA 的三个关键技术：</p>
+<ol>
+<li><strong>NF4（NormalFloat4）</strong>：专为正态分佈权重量化的 4-bit 数据格式，比传统 INT4&#x2F;FP4 误差低 10-30%</li>
+<li><strong>双重量化</strong>：对量化常数再量化，将开销从 0.5 bit&#x2F;param 降至 0.127 bit&#x2F;param</li>
+<li><strong>分页优化器</strong>：利用 CPU 内存作为缓冲，防止长序列训练时 OOM</li>
+</ol>
+<p>内存对比（LLaMA 模型）：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>7B</th>
+<th>13B</th>
+<th>33B</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全量微调 FP16</td>
+<td>~56 GB</td>
+<td>~104 GB</td>
+<td>~264 GB</td>
+</tr>
+<tr>
+<td>LoRA FP16</td>
+<td>~18 GB</td>
+<td>~32 GB</td>
+<td>~72 GB</td>
+</tr>
+<tr>
+<td>QLoRA 4-bit</td>
+<td>~6 GB</td>
+<td>~10 GB</td>
+<td>~22 GB</td>
+</tr>
+</tbody></table>
+<p>QLoRA 的突破性意义在于：7B 模型可以在免费 Google Colab T4 上完成微调。</p>
+<h2 id="实战：在-Colab-上用中文维基百科微调模型"><a href="#实战：在-Colab-上用中文维基百科微调模型" class="headerlink" title="实战：在 Colab 上用中文维基百科微调模型"></a>实战：在 Colab 上用中文维基百科微调模型</h2><h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><p>Google Colab 免费版提供的 T4 GPU 有 16GB 显存，足以运行 QLoRA 微调一个 7B 模型。</p>
+<p>首先安装必要的库：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!pip install -q transformers peft datasets accelerate bitsandbytes trl modelscope</span><br></pre></td></tr></table></figure>
+
+<h3 id="从-ModelScope-下载中文维基百科数据集"><a href="#从-ModelScope-下载中文维基百科数据集" class="headerlink" title="从 ModelScope 下载中文维基百科数据集"></a>从 ModelScope 下载中文维基百科数据集</h3><p>ModelScope 是阿里的开源模型平台，提供了大量中文数据集。中文维基百科数据集 <code>wikipedia-cn-20230720-filtered</code> 包含了经过清洗的中文维基百科内容。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> modelscope <span class="keyword">import</span> snapshot_download</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载数据集</span></span><br><span class="line">dataset_path = snapshot_download(</span><br><span class="line">    <span class="string">&#x27;AI-ModelScope/wikipedia-cn-20230720-filtered&#x27;</span>,</span><br><span class="line">    cache_dir=<span class="string">&#x27;./data&#x27;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>数据集下载后需要做一些预处理，将原始文本转换为指令微调格式。维基百科数据通常是纯文本段落，我们需要将其构造为问答对或指令格式。</p>
+<h3 id="加载模型（4-bit-量化）"><a href="#加载模型（4-bit-量化）" class="headerlink" title="加载模型（4-bit 量化）"></a>加载模型（4-bit 量化）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4-bit 量化配置</span></span><br><span class="line">bnb_config = BitsAndBytesConfig(</span><br><span class="line">    load_in_4bit=<span class="literal">True</span>,</span><br><span class="line">    bnb_4bit_quant_type=<span class="string">&quot;nf4&quot;</span>,</span><br><span class="line">    bnb_4bit_compute_dtype=torch.bfloat16,</span><br><span class="line">    bnb_4bit_use_double_quant=<span class="literal">True</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载模型和分词器</span></span><br><span class="line">model_id = <span class="string">&quot;Qwen/Qwen2.5-7B-Instruct&quot;</span>  <span class="comment"># 或其他适合的中文模型</span></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=<span class="literal">True</span>)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    model_id,</span><br><span class="line">    quantization_config=bnb_config,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span>,</span><br><span class="line">    trust_remote_code=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="注入-LoRA"><a href="#注入-LoRA" class="headerlink" title="注入 LoRA"></a>注入 LoRA</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> LoraConfig, get_peft_model, prepare_model_for_kbit_training</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备模型进行量化训练</span></span><br><span class="line">model = prepare_model_for_kbit_training(model)</span><br><span class="line"></span><br><span class="line"><span class="comment"># LoRA 配置</span></span><br><span class="line">lora_config = LoraConfig(</span><br><span class="line">    r=<span class="number">16</span>,</span><br><span class="line">    lora_alpha=<span class="number">32</span>,</span><br><span class="line">    target_modules=[<span class="string">&quot;q_proj&quot;</span>, <span class="string">&quot;k_proj&quot;</span>, <span class="string">&quot;v_proj&quot;</span>, <span class="string">&quot;o_proj&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;gate_proj&quot;</span>, <span class="string">&quot;up_proj&quot;</span>, <span class="string">&quot;down_proj&quot;</span>],</span><br><span class="line">    lora_dropout=<span class="number">0.05</span>,</span><br><span class="line">    bias=<span class="string">&quot;none&quot;</span>,</span><br><span class="line">    task_type=<span class="string">&quot;CAUSAL_LM&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">model = get_peft_model(model, lora_config)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看可训练参数量</span></span><br><span class="line">model.print_trainable_parameters()</span><br><span class="line"><span class="comment"># 输出类似：trainable params: 41,943,040 || all params: 7,614,556,160 || trainable%: 0.55%</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="训练配置与执行"><a href="#训练配置与执行" class="headerlink" title="训练配置与执行"></a>训练配置与执行</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> trl <span class="keyword">import</span> SFTTrainer</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> TrainingArguments</span><br><span class="line"></span><br><span class="line">training_args = TrainingArguments(</span><br><span class="line">    output_dir=<span class="string">&quot;./output&quot;</span>,</span><br><span class="line">    per_device_train_batch_size=<span class="number">1</span>,</span><br><span class="line">    gradient_accumulation_steps=<span class="number">8</span>,</span><br><span class="line">    learning_rate=<span class="number">2e-4</span>,</span><br><span class="line">    num_train_epochs=<span class="number">3</span>,</span><br><span class="line">    logging_steps=<span class="number">10</span>,</span><br><span class="line">    save_steps=<span class="number">100</span>,</span><br><span class="line">    warmup_ratio=<span class="number">0.1</span>,</span><br><span class="line">    fp16=<span class="literal">True</span>,</span><br><span class="line">    optim=<span class="string">&quot;paged_adamw_8bit&quot;</span>,</span><br><span class="line">    gradient_checkpointing=<span class="literal">True</span>,</span><br><span class="line">    report_to=<span class="string">&quot;none&quot;</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer = SFTTrainer(</span><br><span class="line">    model=model,</span><br><span class="line">    args=training_args,</span><br><span class="line">    train_dataset=train_dataset,</span><br><span class="line">    tokenizer=tokenizer,</span><br><span class="line">    max_seq_length=<span class="number">512</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer.train()</span><br></pre></td></tr></table></figure>
+
+<h3 id="保存与合并-LoRA-权重"><a href="#保存与合并-LoRA-权重" class="headerlink" title="保存与合并 LoRA 权重"></a>保存与合并 LoRA 权重</h3><p>训练完成后，LoRA adapter 的大小通常只有几十 MB，远小于完整的模型权重。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保存 LoRA adapter</span></span><br><span class="line">model.save_pretrained(<span class="string">&quot;./lora_adapter&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果需要合并回基础模型（可选）</span></span><br><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> PeftModel</span><br><span class="line"></span><br><span class="line">base_model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    model_id,</span><br><span class="line">    torch_dtype=torch.bfloat16,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span></span><br><span class="line">)</span><br><span class="line">merged_model = PeftModel.from_pretrained(base_model, <span class="string">&quot;./lora_adapter&quot;</span>)</span><br><span class="line">merged_model = merged_model.merge_and_unload()</span><br><span class="line">merged_model.save_pretrained(<span class="string">&quot;./merged_model&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="训练过程中的注意事项"><a href="#训练过程中的注意事项" class="headerlink" title="训练过程中的注意事项"></a>训练过程中的注意事项</h2><p><strong>数据格式</strong>：中文维基百科的原始数据需要转换为指令格式。比如可以构造如下问答对：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">instruction: 请介绍关于&#123;主题&#125;的知识</span><br><span class="line">input: （可选的上下文）</span><br><span class="line">output: &#123;维基百科段落内容&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>序列长度</strong>：在 T4 GPU 上，max_seq_length 建议设为 512 或 1024。太长会占用过多显存，太短会截断有用信息。</p>
+<p><strong>批次大小</strong>：free tier GPU 上通常只能用 batch_size&#x3D;1，通过 gradient_accumulation_steps 来等效增大有效批次。</p>
+<p><strong>训练时长</strong>：以中文维基百科数据集为例，在 T4 上微调 7B 模型，处理几万条数据大概需要 1-2 小时。</p>
+<h2 id="效果评估"><a href="#效果评估" class="headerlink" title="效果评估"></a>效果评估</h2><p>微调完成后，可以通过几个维度来评估效果：</p>
+<ol>
+<li><strong>困惑度（Perplexity）</strong>：在保留的测试集上计算模型的困惑度</li>
+<li><strong>生成质量</strong>：给定中文问题，观察模型回答的专业性和准确性</li>
+<li><strong>指令遵循</strong>：检查模型是否能正确理解并执行用户指令</li>
+</ol>
+<p>实际测试中，微调后的模型在中文知识问答任务上的表现会有明显提升，尤其是与训练数据领域相关的知识。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>LoRA 的价值在于让”微调”这件事从需要多张高端 GPU 的工作，变成了在免费 Colab 上就能完成的实验。QLoRA 进一步将显存需求压到 4-bit，让 7B 模型在 16GB 显存的 T4 上也能跑起来。</p>
+<p>对于中文场景，从 ModelScope 下载中文维基百科数据集，用 LoRA 在 Colab 上微调，整个流程从数据准备到模型训练可以在一个下午内完成。这是当前成本最低、门槛最低的大模型定制化方案。</p>
+<hr>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>LoRA 原始论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2106.09685">LoRA: Low-Rank Adaptation of Large Language Models</a></li>
+<li>QLoRA 论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2305.14314">QLoRA: Efficient Finetuning of Quantized Language Models</a></li>
+<li>Hugging Face PEFT 库：<a target="_blank" rel="noopener" href="https://github.com/huggingface/peft">https://github.com/huggingface/peft</a></li>
+<li>ModelScope 中文维基百科数据集：<a target="_blank" rel="noopener" href="https://modelscope.cn/datasets/AI-ModelScope/wikipedia-cn-20230720-filtered">https://modelscope.cn/datasets/AI-ModelScope/wikipedia-cn-20230720-filtered</a></li>
+<li>PyTorch 官方 LoRA 微调教程：<a target="_blank" rel="noopener" href="https://pytorch.org/blog/finetune-llms">https://pytorch.org/blog/finetune-llms</a></li>
+</ul>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2026 为美好的世界献上问候
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;SayHelloWorld
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

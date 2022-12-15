@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>用Coze搭建信息采集工作流：从RSS抓取到LLM总结的完整实践 | 为美好的世界献上问候</title>
+    <meta name="author" content="龙虾养殖户" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="AI, Agent, 安全, 技术" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.webp" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>为美好的世界献上问候</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;为美好的世界献上问候</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                
+                
+                
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>用Coze搭建信息采集工作流：从RSS抓取到LLM总结的完整实践</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/5/20
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                技术实践
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Coze/" style="color: #ff7d73">
+                    Coze
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%B7%A5%E4%BD%9C%E6%B5%81/" style="color: #03a9f4">
+                    工作流
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/RSS/" style="color: #ff7d73">
+                    RSS
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="为什么要做这个"><a href="#为什么要做这个" class="headerlink" title="为什么要做这个"></a>为什么要做这个</h2><p>每天要看的信息源太多，手动刷RSS效率低，而且经常刷到一半被别的事打断。后来想能不能搭一个自动化工作流：定时抓取RSS源，用大模型筛选和总结，最后推送给自己。</p>
+<p>选了Coze平台来实现。原因很简单：拖拽搭建，不用写太多代码，而且插件生态比较丰富，RSS相关的插件现成就有。</p>
+<p>实际搭下来踩了不少坑，主要集中在三个方面：Coze的Python环境限制、RSS抓取的稳定性、以及Plugin部署的各种问题。下面把整个过程和解决方案记录一下。</p>
+<h2 id="工作流整体架构"><a href="#工作流整体架构" class="headerlink" title="工作流整体架构"></a>工作流整体架构</h2><p>整个工作流分四个核心环节：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RSS源抓取 → 文章正文采集 → LLM筛选与总结 → 结果输出</span><br></pre></td></tr></table></figure>
+
+<p>对应Coze里的节点：</p>
+<ol>
+<li><strong>开始节点</strong>：接收用户输入的RSS URL列表和兴趣关键词</li>
+<li><strong>RSS读取插件节点</strong>：批量抓取每个RSS源的文章列表</li>
+<li><strong>代码节点</strong>：解析RSS XML，提取文章链接和基本信息</li>
+<li><strong>正文采集节点</strong>：通过Plugin访问每篇文章的正文内容</li>
+<li><strong>LLM节点</strong>：基于兴趣关键词筛选文章，并生成摘要</li>
+<li><strong>结束节点</strong>：输出筛选后的文章列表和摘要</li>
+</ol>
+<p>下面逐个讲每个环节的实现细节和遇到问题经验。</p>
+<h2 id="RSS源抓取节点"><a href="#RSS源抓取节点" class="headerlink" title="RSS源抓取节点"></a>RSS源抓取节点</h2><p>Coze插件商店里搜”RSS”能找到好几个现成的插件，比如 <code>rss_reader</code>。这个插件的用法比较简单：输入一个RSS的URL，返回一个包含文章列表的JSON。</p>
+<p>在工作流里用起来是这样：</p>
+<ul>
+<li>插件节点选择 <code>rss_reader</code></li>
+<li>参数值设置为”引用”，选择开始节点的RSS URL输入参数</li>
+<li>输出参数是一个JSON对象，里面包含 <code>articles</code> 数组</li>
+</ul>
+<p>一般一个RSS源会返回最近30篇文章。如果同时订阅了多个源，需要用<strong>批处理（Batch Processing）</strong>来遍历每个RSS URL。</p>
+<h3 id="批处理的配置"><a href="#批处理的配置" class="headerlink" title="批处理的配置"></a>批处理的配置</h3><p>批处理是Coze工作流里处理数组数据的关键机制。配置步骤：</p>
+<ol>
+<li>在RSS读取节点外面套一个循环节点</li>
+<li>循环数组参数引用开始节点的RSS URL列表（类型需要是Array）</li>
+<li>循环体里放RSS读取插件节点</li>
+<li>循环结束后，所有RSS源的文章会合并成一个大的文章列表</li>
+</ol>
+<p>这里有个细节：如果开始节点的输入参数是字符串类型（一行一个URL），需要先用一个<strong>文本处理节点</strong>把它转成数组。在Python代码节点里处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">args</span>):</span><br><span class="line">    rss_text = args.params[<span class="string">&#x27;rss_list&#x27;</span>]</span><br><span class="line">    urls = [url.strip() <span class="keyword">for</span> url <span class="keyword">in</span> rss_text.strip().split(<span class="string">&#x27;\n&#x27;</span>) <span class="keyword">if</span> url.strip()]</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&#x27;rss_urls&#x27;</span>: urls&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Plugin节点：正文采集"><a href="#Plugin节点：正文采集" class="headerlink" title="Plugin节点：正文采集"></a>Plugin节点：正文采集</h2><p>RSS插件只能拿到文章列表（标题、链接、发布时间），拿不到正文内容。所以需要一个额外的节点来访问每篇文章的页面，提取正文。</p>
+<p>这就是整个工作流里最麻烦的部分。</p>
+<h3 id="问题一：Coze内置的网页访问能力有限"><a href="#问题一：Coze内置的网页访问能力有限" class="headerlink" title="问题一：Coze内置的网页访问能力有限"></a>问题一：Coze内置的网页访问能力有限</h3><p>Coze有一些内置的网页解析插件，但不是所有网站都能正常抓取。有些网站有反爬机制，有些需要JavaScript渲染才能拿到正文。</p>
+<p>我的方案是自己部署一个Plugin，封装一个HTTP请求+HTML解析的逻辑。</p>
+<h3 id="问题二：Plugin部署遇到Python库安装问题"><a href="#问题二：Plugin部署遇到Python库安装问题" class="headerlink" title="问题二：Plugin部署遇到Python库安装问题"></a>问题二：Plugin部署遇到Python库安装问题</h3><p>Coze的Plugin开发支持Python，但环境限制很大：</p>
+<ul>
+<li><strong>大部分三方库无法直接导入</strong>。Coze的Python运行环境基于Pyodide（WebAssembly），只预装了少数几个库（<code>httpx</code>、<code>numpy</code>等）</li>
+<li>即使是 <code>requests</code> 这种常用库，也需要确认是否在预装列表里</li>
+<li><code>requests_async</code> 虽然支持，但已经停止维护多年，本地调试很麻烦</li>
+</ul>
+<p>我一开始想用 <code>beautifulsoup4</code> 来解析HTML，在Coze环境里直接报错——找不到这个模块。</p>
+<h3 id="解决方案：用JavaScript替代Python"><a href="#解决方案：用JavaScript替代Python" class="headerlink" title="解决方案：用JavaScript替代Python"></a>解决方案：用JavaScript替代Python</h3><p>查了官方文档和社区帖子后发现，<strong>Coze工作流的代码节点同时支持JavaScript和Python，而且JavaScript的限制更少</strong>。</p>
+<p>最终我用JavaScript重写了正文采集的逻辑：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">main</span>(<span class="params"><span class="attr">args</span>: <span class="title class_">Args</span></span>): <span class="title class_">Promise</span>&lt;<span class="title class_">Output</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> url = args.<span class="property">url</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 用原生fetch请求文章页面</span></span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(url);</span><br><span class="line">    <span class="keyword">const</span> html = <span class="keyword">await</span> response.<span class="title function_">text</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 简单的正则提取正文（不依赖DOM解析库）</span></span><br><span class="line">    <span class="comment">// 根据目标网站的HTML结构定制提取规则</span></span><br><span class="line">    <span class="keyword">let</span> content = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 提取 &lt;article&gt; 标签内的内容</span></span><br><span class="line">    <span class="keyword">const</span> articleMatch = html.<span class="title function_">match</span>(<span class="regexp">/&lt;article[^&gt;]*&gt;([\s\S]*?)&lt;\/article&gt;/i</span>);</span><br><span class="line">    <span class="keyword">if</span> (articleMatch) &#123;</span><br><span class="line">        content = articleMatch[<span class="number">1</span>]</span><br><span class="line">            .<span class="title function_">replace</span>(<span class="regexp">/&lt;[^&gt;]+&gt;/g</span>, <span class="string">&#x27;&#x27;</span>)  <span class="comment">// 去除HTML标签</span></span><br><span class="line">            .<span class="title function_">replace</span>(<span class="regexp">/\s+/g</span>, <span class="string">&#x27; &#x27;</span>)    <span class="comment">// 合并空白字符</span></span><br><span class="line">            .<span class="title function_">trim</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">content</span>: content.<span class="title function_">substring</span>(<span class="number">0</span>, <span class="number">5000</span>) &#125;;  <span class="comment">// 限制长度</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>JavaScript在Coze环境里用原生 <code>fetch</code> 就能发HTTP请求，不需要额外的库，而且没有Pyodide的那些限制。</p>
+<h3 id="调试流程"><a href="#调试流程" class="headerlink" title="调试流程"></a>调试流程</h3><p>Coze的工作流<strong>不支持在线调试代码节点</strong>，所以必须在本地先调试好再贴进去。</p>
+<p>本地调试步骤：</p>
+<ol>
+<li>安装NodeJS和VS Code</li>
+<li>创建项目，初始化JavaScript配置</li>
+<li>在本地写好代码并测试</li>
+<li>确认能跑通后，贴入Coze的代码节点main方法里</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br><span class="line">npm install typescript -g</span><br><span class="line">npx tsc --init</span><br><span class="line"><span class="comment"># 编写代码后</span></span><br><span class="line">npx tsc</span><br><span class="line">node dist/index.js</span><br></pre></td></tr></table></figure>
+
+<p>本地跑通的代码贴到Coze里基本都能直接运行，这点比较靠谱。</p>
+<h2 id="LLM节点：筛选与总结"><a href="#LLM节点：筛选与总结" class="headerlink" title="LLM节点：筛选与总结"></a>LLM节点：筛选与总结</h2><p>拿到正文内容后，用LLM节点来做两件事：基于兴趣关键词筛选文章，以及生成摘要。</p>
+<h3 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置"></a>参数配置</h3><p>LLM节点的配置要点：</p>
+<ul>
+<li><strong>模型选择</strong>：Coze专业版一般用豆包系列模型，建议选 <code>pro-32k</code>，模式设为”更精准”</li>
+<li><strong>输入参数</strong>：引用上游节点的文章列表（标题+正文+链接）和开始节点的兴趣关键词</li>
+<li><strong>输出格式</strong>：要求LLM输出结构化的JSON</li>
+</ul>
+<h3 id="提示词设计"><a href="#提示词设计" class="headerlink" title="提示词设计"></a>提示词设计</h3><p>经过几轮调试，提示词的关键部分如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">你是一个信息筛选助手。根据用户提供的兴趣关键词，从以下文章列表中筛选出相关的文章。</span><br><span class="line"></span><br><span class="line">要求：</span><br><span class="line">1. 阅读每篇文章的标题和正文，判断是否与用户的兴趣关键词相关</span><br><span class="line">2. 对于相关的文章，生成一段简短的摘要（不超过100字）</span><br><span class="line">3. 输出格式为JSON数组，每个元素包含：</span><br><span class="line">   - article_link: 文章链接</span><br><span class="line">   - title: 文章标题</span><br><span class="line">   - summary: 摘要内容</span><br><span class="line">   - relevance_score: 相关性评分（0-100）</span><br><span class="line">4. 按relevance_score降序排列</span><br><span class="line">5. 只输出JSON，不要输出其他内容</span><br></pre></td></tr></table></figure>
+
+<p>提示词设计有几个经验：</p>
+<ul>
+<li><strong>明确输出格式</strong>。LLM节点的输出会被下游节点引用，如果格式不对会导致整个工作流报错。用JSON格式比较稳定，比Markdown格式更容易解析。</li>
+<li><strong>给具体的限制条件</strong>。比如”摘要不超过100字”、”只输出JSON”，这样能减少LLM输出多余内容的情况。</li>
+<li><strong>用变量引用用户输入</strong>。在提示词里用 <code>&#123;&#123;user_input&#125;&#125;</code> 引用开始节点的参数，这样每次运行可以传入不同的关键词。</li>
+</ul>
+<h3 id="处理LLM输出"><a href="#处理LLM输出" class="headerlink" title="处理LLM输出"></a>处理LLM输出</h3><p>LLM节点输出的是文本（JSON字符串），下游如果需要数组格式，需要用代码节点做一次转换：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">main</span>(<span class="params"><span class="attr">args</span>: <span class="title class_">Args</span></span>): <span class="title class_">Promise</span>&lt;<span class="title class_">Output</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> llmOutput = args.<span class="property">llm_output</span>;</span><br><span class="line">    <span class="keyword">let</span> articles = [];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        articles = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(llmOutput);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="comment">// 尝试提取JSON部分</span></span><br><span class="line">        <span class="keyword">const</span> jsonMatch = llmOutput.<span class="title function_">match</span>(<span class="regexp">/\[[\s\S]*\]/</span>);</span><br><span class="line">        <span class="keyword">if</span> (jsonMatch) &#123;</span><br><span class="line">            articles = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(jsonMatch[<span class="number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">articles</span>: articles &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这一步很重要，因为LLM有时候会在JSON前后加一些解释文字，直接 <code>JSON.parse</code> 会报错。加一个兜底的正则提取能提高稳定性。</p>
+<h2 id="RSS抓取的稳定性问题"><a href="#RSS抓取的稳定性问题" class="headerlink" title="RSS抓取的稳定性问题"></a>RSS抓取的稳定性问题</h2><p>实际跑了一段时间后发现RSS抓取不太稳定，主要有几个原因：</p>
+<h3 id="问题一：部分RSS源返回格式不规范"><a href="#问题一：部分RSS源返回格式不规范" class="headerlink" title="问题一：部分RSS源返回格式不规范"></a>问题一：部分RSS源返回格式不规范</h3><p>有些网站的RSS feed格式不标准，比如XML声明缺失、标签嵌套错误等。Coze的RSS插件对这些问题的容错性不够好。</p>
+<p><strong>解决方案</strong>：在RSS读取节点后面加一个代码节点，做XML解析的容错处理。用正则表达式提取关键字段，而不是完全依赖XML解析器。</p>
+<h3 id="问题二：网络超时"><a href="#问题二：网络超时" class="headerlink" title="问题二：网络超时"></a>问题二：网络超时</h3><p>有些RSS源响应比较慢，Coze的节点有超时限制，超过一定时间就会报错。</p>
+<p><strong>解决方案</strong>：在工作流里加一个错误处理分支。Coze支持条件判断节点，可以判断上游节点是否报错，报错的话跳过这个源继续处理下一个。</p>
+<h3 id="问题三：频率限制"><a href="#问题三：频率限制" class="headerlink" title="问题三：频率限制"></a>问题三：频率限制</h3><p>Coze的插件调用有频率限制，批量抓取多个RSS源时容易触发。</p>
+<p><strong>解决方案</strong>：在批处理的循环体里加一个延迟节点（用代码节点的sleep），控制请求间隔。不过Coze的代码节点也有执行时间限制，sleep不能太长。实测500ms的间隔比较合适。</p>
+<h2 id="部署和运行"><a href="#部署和运行" class="headerlink" title="部署和运行"></a>部署和运行</h2><p>整个工作流搭好后，可以配置定时触发器让它自动运行：</p>
+<ol>
+<li>在Bot设置里选择”触发器”</li>
+<li>选择”定时触发”，设置运行时间（比如每天早上8点）</li>
+<li>配置输入参数的默认值（RSS URL列表、兴趣关键词）</li>
+<li>发布到飞书渠道（触发器目前只对飞书渠道生效）</li>
+</ol>
+<p>也可以手动触发测试：在Coze的调试界面直接运行工作流，检查每个节点的输出是否正确。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>用Coze搭建信息采集工作流整体体验不错，拖拽搭建的效率比写代码快很多。但有几个点需要注意：</p>
+<ol>
+<li><strong>Python环境限制大</strong>。如果需要爬取网页或做复杂的数据处理，优先用JavaScript</li>
+<li><strong>Plugin部署有坑</strong>。三方库的安装在Coze环境里受限，最好先在本地确认好能用再部署</li>
+<li><strong>RSS抓取要做容错</strong>。不同网站的RSS格式差异大，网络也不稳定，需要加错误处理和重试逻辑</li>
+<li><strong>LLM输出要格式化</strong>。提示词里明确要求输出JSON，并加代码做格式转换，能避免很多下游节点的报错</li>
+<li><strong>本地调试是必须的</strong>。Coze不支持在线调试代码节点，所有代码都要在本地先跑通</li>
+</ol>
+<p>目前这个工作流已经稳定运行了一段时间，每天自动抓取和总结几十篇文章，筛选出最相关的内容推送给我。省去了手动刷RSS的时间，信息获取效率提升了不少。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2026 为美好的世界献上问候
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;SayHelloWorld
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

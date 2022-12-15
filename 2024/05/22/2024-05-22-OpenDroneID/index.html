@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>OpenDroneID协议研究：无人机远程识别的开放标准 | 为美好的世界献上问候</title>
+    <meta name="author" content="龙虾养殖户" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="AI, Agent, 安全, 技术" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.webp" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>为美好的世界献上问候</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;为美好的世界献上问候</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                
+                
+                
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>OpenDroneID协议研究：无人机远程识别的开放标准</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/5/22
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF%E7%A0%94%E7%A9%B6/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                技术研究
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E6%97%A0%E4%BA%BA%E6%9C%BA/" style="color: #ff7d73">
+                    无人机
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/Remote-ID/" style="color: #03a9f4">
+                    Remote ID
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="color: #ffa2c4">
+                    协议
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>全球无人机数量在过去几年快速增长，从消费级航拍无人机到工业级物流无人机，低空空域的使用密度显著提升。随之而来的问题是：当空中出现一架无人机时，地面人员如何知道它是谁的、从哪里起飞、在执行什么任务？</p>
+<p>传统做法是依靠机场塔台的雷达和目视观察，但这些手段对小型消费级无人机基本无效——它们体积太小，雷达反射截面很小，而且很多飞行活动发生在雷达覆盖不到的区域。监管机构需要一种更直接的方式来识别这些”无名”的飞行器。</p>
+<p>2021年，美国联邦航空管理局（FAA）正式发布了Remote ID最终规则，要求在美国注册的无人机必须具备广播身份信息的能力。欧盟航空安全局（EASA）也推进了类似的Direct Remote ID法规。日本国土交通省（MLIT）在2022年6月20日起强制要求广播式Remote ID。</p>
+<p>这些法规催生了一个关键需求：需要一个开放、可互操作的协议来统一Remote ID的实现方式。OpenDroneID就是这个需求的产物——它是ASTM F3411和ASD-STAN prEN 4709-002标准的开源实现。</p>
+<h2 id="什么是Remote-ID"><a href="#什么是Remote-ID" class="headerlink" title="什么是Remote ID"></a>什么是Remote ID</h2><p>Remote ID（远程识别）本质上是给无人机加了一个”电子车牌”。它通过无线电广播的方式，将无人机的身份信息、位置信息、操作者信息等数据发送给周围的接收设备。</p>
+<p>Remote ID有两种主要实现方式：</p>
+<ol>
+<li><p><strong>广播式Remote ID（Direct Remote ID）</strong>：无人机直接通过蓝牙或Wi-Fi向周围广播识别信息，不依赖互联网连接。这是OpenDroneID主要覆盖的场景。</p>
+</li>
+<li><p><strong>网络式Remote ID（Network Remote ID）</strong>：无人机通过蜂窝网络或互联网将识别信息发送到在线服务，接收者通过网络查询获取信息。</p>
+</li>
+</ol>
+<p>FAA的规则主要要求广播式Remote ID。操作员有两种合规路径：购买内置Remote ID功能的新无人机，或者为现有无人机加装独立的Remote ID广播模块。</p>
+<h2 id="OpenDroneID协议架构"><a href="#OpenDroneID协议架构" class="headerlink" title="OpenDroneID协议架构"></a>OpenDroneID协议架构</h2><p>OpenDroneID定义了6种消息类型，外加1种用于将多条消息打包的Message Pack类型：</p>
+<h3 id="1-Basic-ID（基本标识）"><a href="#1-Basic-ID（基本标识）" class="headerlink" title="1. Basic ID（基本标识）"></a>1. Basic ID（基本标识）</h3><p>包含无人机的核心身份信息：</p>
+<ul>
+<li><strong>UAS ID</strong>：无人机的唯一序列号，遵循ANSI&#x2F;CTA-2063-A标准</li>
+<li><strong>UA Type</strong>：无人机类型，取值包括：<ul>
+<li>Fixed wing（固定翼）</li>
+<li>Multi-rotor（多旋翼）</li>
+<li>Helicopter（直升机）</li>
+<li>Hybrid Lift（混合升力）</li>
+<li>Other（其他）</li>
+</ul>
+</li>
+<li><strong>ID Type</strong>：标识符类型（序列号、CAA注册号、UTM执行标识符等）</li>
+</ul>
+<h3 id="2-Location（位置）"><a href="#2-Location（位置）" class="headerlink" title="2. Location（位置）"></a>2. Location（位置）</h3><p>包含无人机的实时动态位置信息：</p>
+<ul>
+<li><strong>Latitude</strong>：纬度，单位为10^-7度</li>
+<li><strong>Longitude</strong>：经度，单位为10^-7度</li>
+<li><strong>Altitude Type</strong>：高度参考类型<ul>
+<li>Above Takeoff Point（起飞点以上，即AGL）</li>
+<li>Above Sea Level（海拔高度，即WGS-84椭球高度）</li>
+</ul>
+</li>
+<li><strong>Altitude</strong>：高度值，单位为米</li>
+<li><strong>Heading</strong>：航向角，单位为度（0-360）</li>
+<li><strong>Speed</strong>：水平速度，单位为m&#x2F;s</li>
+<li><strong>VSpeed</strong>：垂直速度，单位为m&#x2F;s（正值上升，负值下降）</li>
+<li><strong>Timestamp</strong>：时间戳，自UTC 2022年1月1日起的秒数</li>
+</ul>
+<h3 id="3-Authentication（认证）"><a href="#3-Authentication（认证）" class="headerlink" title="3. Authentication（认证）"></a>3. Authentication（认证）</h3><p>用于身份验证和防篡改。协议定义了4种认证页面类型：</p>
+<ul>
+<li>Account ID（账户ID）</li>
+<li>Authentication Code（认证码，基于位置&#x2F;时间的散列）</li>
+<li>Session ID（会话ID）</li>
+<li>Message Set Signature（消息集签名）</li>
+</ul>
+<p>认证数据在16个页面之间循环传输。</p>
+<h3 id="4-Self-ID（自标识）"><a href="#4-Self-ID（自标识）" class="headerlink" title="4. Self-ID（自标识）"></a>4. Self-ID（自标识）</h3><p>操作者可选填的明文描述信息，比如”航拍摄影”、”农业喷洒”等用途说明。</p>
+<h3 id="5-System（系统）"><a href="#5-System（系统）" class="headerlink" title="5. System（系统）"></a>5. System（系统）</h3><p>包含操作者和运营系统的信息：</p>
+<ul>
+<li><strong>Operator Location Type</strong>：操作者位置类型（固定&#x2F;动态&#x2F;未知）</li>
+<li><strong>Operator Latitude&#x2F;Longitude</strong>：操作者位置坐标</li>
+<li><strong>Operator Altitude</strong>：操作者海拔高度</li>
+<li><strong>Area Count</strong>：同时操控的无人机数量</li>
+<li><strong>Area Radius</strong>：运营区域半径</li>
+<li><strong>Area Ceiling</strong>：运营区域高度上限</li>
+<li><strong>Area Floor</strong>：运营区域高度下限</li>
+<li><strong>Classification</strong>：EASA分类（Open&#x2F;Specific&#x2F;Certified）</li>
+<li><strong>Timestamp</strong>：时间戳</li>
+</ul>
+<h3 id="6-Operator-ID（操作者ID）"><a href="#6-Operator-ID（操作者ID）" class="headerlink" title="6. Operator ID（操作者ID）"></a>6. Operator ID（操作者ID）</h3><p>操作者的注册标识符，如FAA的Remote ID编号。</p>
+<h3 id="7-Message-Pack（消息包）"><a href="#7-Message-Pack（消息包）" class="headerlink" title="7. Message Pack（消息包）"></a>7. Message Pack（消息包）</h3><p>将上述多种消息打包为一个整体。Wi-Fi NaN、Wi-Fi Beacon和蓝牙5.0 Extended Advertising使用Message Pack来传输数据，而蓝牙4.x Legacy Advertising由于25字节的广播数据限制，只能逐条发送单个消息。</p>
+<h2 id="广播方式"><a href="#广播方式" class="headerlink" title="广播方式"></a>广播方式</h2><p>OpenDroneID支持四种物理层广播方式：</p>
+<h3 id="蓝牙4-x-Legacy-Advertising"><a href="#蓝牙4-x-Legacy-Advertising" class="headerlink" title="蓝牙4.x Legacy Advertising"></a>蓝牙4.x Legacy Advertising</h3><p>最基础的广播方式，兼容性最好。但蓝牙4.x的广播数据包限制为31字节，一条Remote ID消息通常超过这个限制，因此需要将数据拆分到多个广播包中发送。接收端需要重组这些包才能还原完整消息。至少每333ms广播一次，以满足每秒3条消息的最低要求。</p>
+<h3 id="蓝牙5-0-Long-Range-with-Extended-Advertising"><a href="#蓝牙5-0-Long-Range-with-Extended-Advertising" class="headerlink" title="蓝牙5.0 Long Range with Extended Advertising"></a>蓝牙5.0 Long Range with Extended Advertising</h3><p>蓝牙5.0扩展了广播数据包的长度限制，支持发送完整的Message Pack。同时支持长距离模式（Coded PHY），可以显著扩大广播覆盖范围。欧盟法规将此作为强制要求。</p>
+<h3 id="Wi-Fi-Neighbor-Awareness-Networking-NaN"><a href="#Wi-Fi-Neighbor-Awareness-Networking-NaN" class="headerlink" title="Wi-Fi Neighbor Awareness Networking (NaN)"></a>Wi-Fi Neighbor Awareness Networking (NaN)</h3><p>Wi-Fi NaN（也叫Wi-Fi Aware）是一种设备间直接发现和通信的协议，不需要接入点。无人机通过NaN服务广播Remote ID数据，范围内的接收设备可以自动发现并接收这些数据。支持2.4GHz和5GHz频段。美国和欧盟法规都将此列为强制支持。</p>
+<h3 id="Wi-Fi-Beacon"><a href="#Wi-Fi-Beacon" class="headerlink" title="Wi-Fi Beacon"></a>Wi-Fi Beacon</h3><p>在标准Wi-Fi Beacon帧中嵌入Remote ID数据（使用厂商自定义元素）。这种方式不需要设备之间建立连接，任何监听Wi-Fi Beacon的设备都能接收到数据。</p>
+<h2 id="与其他标准的关系"><a href="#与其他标准的关系" class="headerlink" title="与其他标准的关系"></a>与其他标准的关系</h2><p>OpenDroneID不是一个孤立的标准，它处于多个标准体系的交汇点：</p>
+<ul>
+<li><strong>ASTM F3411</strong>：美国的Remote ID标准，OpenDroneID的v3版本基于ASTM F3411 v1.1（F3411-22a）</li>
+<li><strong>ASD-STAN prEN 4709-002</strong>：欧洲的Direct Remote ID标准，与ASTM F3411 v1.1保持对齐</li>
+<li><strong>IETF DRIP</strong>：IETF的Drone Remote ID Protocol工作组定义了Remote ID的安全和信任框架。已发布的RFC包括RFC 9153（需求和术语）、RFC 9374（RID实现）、RFC 9434（架构）。DRIP在ASTM的广播基础上增加了HIT（Hash-based ID）等安全机制</li>
+<li><strong>MAVLink</strong>：OpenDroneID定义了对应的MAVLink消息，飞控系统可以通过MAVLink将位置和身份信息发送给Remote ID广播模块</li>
+</ul>
+<h2 id="各区域法规差异"><a href="#各区域法规差异" class="headerlink" title="各区域法规差异"></a>各区域法规差异</h2><p>不同地区对Remote ID的要求存在差异：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>FAA规则</th>
+<th>ASTM v1.1</th>
+<th>EU规则</th>
+<th>日本规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>序列号(ANSI&#x2F;CTA-2063-A)</td>
+<td>必需</td>
+<td>必需</td>
+<td>必需</td>
+<td>必需</td>
+</tr>
+<tr>
+<td>动态位置</td>
+<td>必需</td>
+<td>必需</td>
+<td>必需</td>
+<td>必需</td>
+</tr>
+<tr>
+<td>WGS-84高度</td>
+<td>必需</td>
+<td>必需</td>
+<td>-</td>
+<td>必需</td>
+</tr>
+<tr>
+<td>AGL&#x2F;起飞点高度</td>
+<td>-</td>
+<td>可选</td>
+<td>必需</td>
+<td>可选</td>
+</tr>
+<tr>
+<td>操作者动态位置</td>
+<td>必需</td>
+<td>可选</td>
+<td>必需</td>
+<td>可选</td>
+</tr>
+<tr>
+<td>广播间隔</td>
+<td>1秒</td>
+<td>1或3秒</td>
+<td>-</td>
+<td>1秒</td>
+</tr>
+<tr>
+<td>BT5 Long Range</td>
+<td>-</td>
+<td>可选</td>
+<td>必需</td>
+<td>必需</td>
+</tr>
+<tr>
+<td>Wi-Fi NaN</td>
+<td>-</td>
+<td>必需</td>
+<td>必需</td>
+<td>必需</td>
+</tr>
+</tbody></table>
+<h2 id="安全问题"><a href="#安全问题" class="headerlink" title="安全问题"></a>安全问题</h2><p>OpenDroneID的广播数据既没有加密也没有签名验证，这是一个已知的设计权衡。这意味着：</p>
+<ol>
+<li><strong>隐私问题</strong>：任何人都能接收和解码无人机的广播数据，包括操作者位置</li>
+<li><strong>伪造攻击</strong>：攻击者可以注入伪造的Remote ID数据，制造虚假的无人机存在</li>
+<li><strong>数据篡改</strong>：中间人可以修改广播中的位置或身份信息</li>
+</ol>
+<p>IETF DRIP工作组正在通过HIT和签名机制解决部分安全问题，但这些方案在当前的OpenDroneID实现中尚未广泛部署。Nozomi Networks等安全厂商已经开发了检测异常ODID流量（如不合理的遥测数据、重复消息、异常流量激增）的能力。</p>
+<h2 id="开源实现"><a href="#开源实现" class="headerlink" title="开源实现"></a>开源实现</h2><p>opendroneid-core-c是OpenDroneID的官方C语言库，提供了消息编码和解码功能。主要的硬件实现包括：</p>
+<ul>
+<li><strong>ArduRemoteID</strong>：基于ESP32-S3&#x2F;C3的固件，支持BT4、BT5和Wi-Fi，与ArduPilot飞控集成</li>
+<li><strong>ESP32实现</strong>：基础ESP32仅支持BT4 Legacy Advertising，ESP32-S3&#x2F;C3支持BT5</li>
+<li><strong>Linux发送器</strong>：支持Wi-Fi NaN的Linux实现</li>
+</ul>
+<p>接收端方面，Android有官方的OpenDroneID OSM应用和Dronetag的DroneScanner；iOS方面由于苹果的限制，仅支持BT4 Legacy Advertising的接收。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>OpenDroneID作为Remote ID的开源实现，解决了一个实际问题：在无人机数量快速增长的背景下，如何让监管机构和公众识别空中的飞行器。协议本身的技术设计相对简洁——基于蓝牙和Wi-Fi的广播机制，消息格式清晰，实现门槛不高。</p>
+<p>但安全方面的缺陷是显而易见的。缺乏加密和认证意味着协议更容易被伪造和攻击，IETF DRIP的扩展方案是否能有效解决这些问题还有待观察。在法规强制推动和实际安全需求之间，OpenDroneID目前选择了先实现基本功能，安全增强留待后续版本。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2026 为美好的世界献上问候
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;SayHelloWorld
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
