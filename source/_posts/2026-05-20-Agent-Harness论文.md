@@ -11,6 +11,8 @@ categories:
 
 ## 背景：为什么关注 Agent Harness
 
+<!-- more -->
+
 最近在读 Anthropic 发布的一系列关于 Agent Harness 的工程博文，从 2024 年底的 *Building Effective Agents* 到 2025 年底的 *Effective Harnesses for Long-Running Agents*，再到 2026 年初的 *Harness Design for Long-Running Application Development*。这些文章串在一起看，能看到一条清晰的演进线索：模型能力在飞速进步，但真正决定 Agent 能不能落地做事的，是包裹在模型外面的那套工程系统。
 
 LangChain 在 2026 年 3 月发了一篇 *The Anatomy of an Agent Harness*，里面引用了一个数据：同一个模型，换一套 Harness 架构，Terminal Bench 2.0 的通过率从 52.8% 拉到 66.5%。模型权重没动一个字节，纯靠外围工程改了跑分。这个数字挺震撼的，说明 Harness 不是什么锦上添花的东西，它是 Agent 能力的核心乘法因子。
