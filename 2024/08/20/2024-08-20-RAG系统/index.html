@@ -81,10 +81,6 @@
             <i class="fa-solid fa-id-card fa-fw"></i>
             <span>&ensp;About</span>
         </a>
-                <a href="/about">
-                    <i class="fa-solid fa-id-card fa-fw"></i>
-                    <span>&ensp;About</span>
-                </a>
         
         
         
@@ -195,7 +191,8 @@
 <li><strong>在线查询阶段</strong>：用户提问 → query 也编码成向量 → 向量搜索找到最相关的 chunk → 拼成 prompt → 调用 LLM 生成回答</li>
 </ol>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>我用的环境：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install langchain langchain-community chromadb sentence-transformers ollama</span><br></pre></td></tr></table></figure>
+<pre class="bash"><code>pip install langchain langchain-community chromadb sentence-transformers ollama
+</code></pre>
 
 <ul>
 <li><strong>LangChain</strong>：负责串联整个 RAG pipeline</li>
@@ -205,10 +202,31 @@
 </ul>
 <p>如果你用 OpenAI 的 embedding 和 LLM，把 <code>sentence-transformers</code> 换成 <code>openai</code> 就行，ChromaDB 那边 LangChain 有现成的集成。</p>
 <h2 id="数据加载与切分"><a href="#数据加载与切分" class="headerlink" title="数据加载与切分"></a>数据加载与切分</h2><p>先加载文档。LangChain 支持 PDF、TXT、Markdown 等格式，简历一般是 PDF：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_community.document_loaders <span class="keyword">import</span> PyPDFLoader</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载单个简历</span></span><br><span class="line">loader = PyPDFLoader(<span class="string">&quot;resume_001.pdf&quot;</span>)</span><br><span class="line">docs = loader.load()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 批量加载整个目录</span></span><br><span class="line"><span class="keyword">from</span> langchain_community.document_loaders <span class="keyword">import</span> DirectoryLoader</span><br><span class="line"></span><br><span class="line">loader = DirectoryLoader(<span class="string">&quot;./resumes/&quot;</span>, glob=<span class="string">&quot;*.pdf&quot;</span>, loader_cls=PyPDFLoader)</span><br><span class="line">docs = loader.load()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;共加载 <span class="subst">&#123;<span class="built_in">len</span>(docs)&#125;</span> 页文档&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre class="python"><code>from langchain_community.document_loaders import PyPDFLoader
+
+# 加载单个简历
+loader = PyPDFLoader("resume_001.pdf")
+docs = loader.load()
+
+# 批量加载整个目录
+from langchain_community.document_loaders import DirectoryLoader
+
+loader = DirectoryLoader("./resumes/", glob="*.pdf", loader_cls=PyPDFLoader)
+docs = loader.load()
+print(f"共加载 &#123;len(docs)&#125; 页文档")
+</code></pre>
 
 <p>然后切分。这是整个 RAG 系统里最关键的一步——切得好不好，直接决定检索质量。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> RecursiveCharacterTextSplitter</span><br><span class="line"></span><br><span class="line">text_splitter = RecursiveCharacterTextSplitter(</span><br><span class="line">    chunk_size=<span class="number">800</span>,       <span class="comment"># 每个 chunk 最大 800 字符</span></span><br><span class="line">    chunk_overlap=<span class="number">200</span>,    <span class="comment"># 相邻 chunk 重叠 200 字符</span></span><br><span class="line">    separators=[<span class="string">&quot;\n\n&quot;</span>, <span class="string">&quot;\n&quot;</span>, <span class="string">&quot;。&quot;</span>, <span class="string">&quot;；&quot;</span>, <span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>]</span><br><span class="line">)</span><br><span class="line">chunks = text_splitter.split_documents(docs)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;共生成 <span class="subst">&#123;<span class="built_in">len</span>(chunks)&#125;</span> 个 chunk&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre class="python"><code>from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=800,       # 每个 chunk 最大 800 字符
+    chunk_overlap=200,    # 相邻 chunk 重叠 200 字符
+    separators=["\n\n", "\n", "。", "；", " ", ""]
+)
+chunks = text_splitter.split_documents(docs)
+print(f"共生成 &#123;len(chunks)&#125; 个 chunk")
+</code></pre>
 
 <p><strong>为什么要切分？</strong> 两个原因：</p>
 <ol>
@@ -217,15 +235,36 @@
 </ol>
 <p><strong>chunk_size 和 chunk_overlap 怎么选？</strong> 我后面会详细说。</p>
 <h2 id="Embedding-与向量存储"><a href="#Embedding-与向量存储" class="headerlink" title="Embedding 与向量存储"></a>Embedding 与向量存储</h2><p>切分完成后，用 embedding 模型把每个 chunk 编码成向量，存入 ChromaDB：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_community.vectorstores <span class="keyword">import</span> Chroma</span><br><span class="line"><span class="keyword">from</span> langchain_community.embeddings <span class="keyword">import</span> OllamaEmbeddings</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用 Ollama 跑本地 embedding</span></span><br><span class="line">embedding = OllamaEmbeddings(model=<span class="string">&quot;nomic-embed-text&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存入 ChromaDB（首次创建，自动持久化）</span></span><br><span class="line">vectorstore = Chroma.from_documents(</span><br><span class="line">    documents=chunks,</span><br><span class="line">    embedding=embedding,</span><br><span class="line">    persist_directory=<span class="string">&quot;./chroma_db&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<pre class="python"><code>from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import OllamaEmbeddings
+
+# 用 Ollama 跑本地 embedding
+embedding = OllamaEmbeddings(model="nomic-embed-text")
+
+# 存入 ChromaDB（首次创建，自动持久化）
+vectorstore = Chroma.from_documents(
+    documents=chunks,
+    embedding=embedding,
+    persist_directory="./chroma_db"
+)
+</code></pre>
 
 <p>ChromaDB 会把向量和原始文本一起存在本地 <code>./chroma_db</code> 目录。下次启动不用重新 embedding，直接加载：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vectorstore = Chroma(</span><br><span class="line">    persist_directory=<span class="string">&quot;./chroma_db&quot;</span>,</span><br><span class="line">    embedding_function=embedding</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<pre class="python"><code>vectorstore = Chroma(
+    persist_directory="./chroma_db",
+    embedding_function=embedding
+)
+</code></pre>
 
 <p>这个持久化机制挺方便，上万份简历编码一次就够了，后面查询都是毫秒级。</p>
 <h2 id="检索：向量搜索是怎么工作的"><a href="#检索：向量搜索是怎么工作的" class="headerlink" title="检索：向量搜索是怎么工作的"></a>检索：向量搜索是怎么工作的</h2><p>RAG 的核心在”Retrieval”——怎么从一堆 chunk 里找到和问题最相关的那几条。</p>
 <h3 id="向量搜索（Dense-Search）"><a href="#向量搜索（Dense-Search）" class="headerlink" title="向量搜索（Dense Search）"></a>向量搜索（Dense Search）</h3><p>embedding 模型把文本编码成一个低维稠密向量（比如 nomic-embed-text 输出 768 维）。向量之间的距离（通常是 cosine similarity）代表语义相似度。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 手动测试语义搜索</span></span><br><span class="line">results = vectorstore.similarity_search(<span class="string">&quot;会 Python 的候选人&quot;</span>, k=<span class="number">3</span>)</span><br><span class="line"><span class="keyword">for</span> doc <span class="keyword">in</span> results:</span><br><span class="line">    <span class="built_in">print</span>(doc.page_content[:<span class="number">100</span>])</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;---&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre class="python"><code># 手动测试语义搜索
+results = vectorstore.similarity_search("会 Python 的候选人", k=3)
+for doc in results:
+    print(doc.page_content[:100])
+    print("---")
+</code></pre>
 
 <p>为什么叫”语义搜索”？因为它的比较不是基于关键词匹配，而是基于含义。比如你搜”编程语言经验”，即使用的是”Python”这个词出现频率不高的 chunk，只要那个 chunk 在语义上和”编程语言”相关，也能被检索到。</p>
 <h3 id="Sparse-Search（关键词搜索）"><a href="#Sparse-Search（关键词搜索）" class="headerlink" title="Sparse Search（关键词搜索）"></a>Sparse Search（关键词搜索）</h3><p>传统的关键词搜索（如 BM25）是另一种方式。它基于词频统计，精确匹配关键词。</p>
@@ -265,7 +304,11 @@
 </tr>
 </tbody></table>
 <p>在我的简历筛选场景中，大部分查询是自然语言（”有机器学习经验的人”），用 Dense Search 效果更好。但有些查询是精确术语（”要求 CKA 认证”），Dense Search 可能漏掉。实际使用中可以两种结合。</p>
-<h3 id="LangChain-中的检索配置"><a href="#LangChain-中的检索配置" class="headerlink" title="LangChain 中的检索配置"></a>LangChain 中的检索配置</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">retriever = vectorstore.as_retriever(</span><br><span class="line">    search_type=<span class="string">&quot;similarity&quot;</span>,   <span class="comment"># 默认 cosine similarity</span></span><br><span class="line">    search_kwargs=&#123;<span class="string">&quot;k&quot;</span>: <span class="number">5</span>&#125;      <span class="comment"># 返回 top-5 结果</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="LangChain-中的检索配置"><a href="#LangChain-中的检索配置" class="headerlink" title="LangChain 中的检索配置"></a>LangChain 中的检索配置</h3><pre class="python"><code>retriever = vectorstore.as_retriever(
+    search_type="similarity",   # 默认 cosine similarity
+    search_kwargs=&#123;"k": 5&#125;      # 返回 top-5 结果
+)
+</code></pre>
 
 <p>LangChain 支持几种 search_type：</p>
 <ul>
@@ -275,7 +318,22 @@
 </ul>
 <p>对于简历筛选这种场景，我用 <code>similarity</code> + 合理的 k 值就够了。</p>
 <h2 id="生成回答"><a href="#生成回答" class="headerlink" title="生成回答"></a>生成回答</h2><p>检索到相关 chunk 后，把它们拼进 prompt 让 LLM 生成回答：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_community.chat_models <span class="keyword">import</span> ChatOllama</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> RetrievalQA</span><br><span class="line"></span><br><span class="line">llm = ChatOllama(model=<span class="string">&quot;llama3.1:8b&quot;</span>, temperature=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">qa_chain = RetrievalQA.from_chain_type(</span><br><span class="line">    llm=llm,</span><br><span class="line">    chain_type=<span class="string">&quot;stuff&quot;</span>,       <span class="comment"># 把所有检索结果拼接成一个 prompt</span></span><br><span class="line">    retriever=retriever,</span><br><span class="line">    return_source_documents=<span class="literal">True</span>   <span class="comment"># 同时返回引用的文档来源</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提问</span></span><br><span class="line">result = qa_chain.invoke(&#123;<span class="string">&quot;query&quot;</span>: <span class="string">&quot;这些候选人中有谁会 Rust 吗？&quot;</span>&#125;)</span><br><span class="line"><span class="built_in">print</span>(result[<span class="string">&quot;result&quot;</span>])</span><br></pre></td></tr></table></figure>
+<pre class="python"><code>from langchain_community.chat_models import ChatOllama
+from langchain.chains import RetrievalQA
+
+llm = ChatOllama(model="llama3.1:8b", temperature=0)
+
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    chain_type="stuff",       # 把所有检索结果拼接成一个 prompt
+    retriever=retriever,
+    return_source_documents=True   # 同时返回引用的文档来源
+)
+
+# 提问
+result = qa_chain.invoke(&#123;"query": "这些候选人中有谁会 Rust 吗？"&#125;)
+print(result["result"])
+</code></pre>
 
 <p><code>chain_type=&quot;stuff&quot;</code> 是最简单的策略：把检索到的 chunk 直接拼接在一起塞进 prompt。如果检索结果太多，可能会超过 LLM 的上下文长度限制，这时候可以换用 <code>map_reduce</code> 或 <code>refine</code> 等策略。</p>
 <p>我实际测试下来，k&#x3D;3~5 比较合适。太少可能漏掉信息，太多会引入噪声。</p>
@@ -308,7 +366,52 @@
 <p>简历筛选涉及中文，我用的是 bge-large-zh-v1.5，效果比 nomic-embed-text 好一些。</p>
 <h3 id="5-LLM-的-temperature"><a href="#5-LLM-的-temperature" class="headerlink" title="5. LLM 的 temperature"></a>5. LLM 的 temperature</h3><p>temperature&#x3D;0 让回答确定性更强，适合需要精确引用的场景。temperature 越高回答越”灵活”，但可能编造不存在的信息。RAG 场景一般设 0 或 0.1。</p>
 <h2 id="完整代码示例"><a href="#完整代码示例" class="headerlink" title="完整代码示例"></a>完整代码示例</h2><p>把上面的步骤串起来，一个最小可运行的 RAG 系统大概是这样：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> langchain_community.document_loaders <span class="keyword">import</span> DirectoryLoader, PyPDFLoader</span><br><span class="line"><span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> RecursiveCharacterTextSplitter</span><br><span class="line"><span class="keyword">from</span> langchain_community.vectorstores <span class="keyword">import</span> Chroma</span><br><span class="line"><span class="keyword">from</span> langchain_community.embeddings <span class="keyword">import</span> OllamaEmbeddings</span><br><span class="line"><span class="keyword">from</span> langchain_community.chat_models <span class="keyword">import</span> ChatOllama</span><br><span class="line"><span class="keyword">from</span> langchain.chains <span class="keyword">import</span> RetrievalQA</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 加载文档</span></span><br><span class="line">loader = DirectoryLoader(<span class="string">&quot;./resumes/&quot;</span>, glob=<span class="string">&quot;*.pdf&quot;</span>, loader_cls=PyPDFLoader)</span><br><span class="line">docs = loader.load()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;加载了 <span class="subst">&#123;<span class="built_in">len</span>(docs)&#125;</span> 页&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 切分</span></span><br><span class="line">splitter = RecursiveCharacterTextSplitter(</span><br><span class="line">    chunk_size=<span class="number">800</span>, chunk_overlap=<span class="number">200</span>,</span><br><span class="line">    separators=[<span class="string">&quot;\n\n&quot;</span>, <span class="string">&quot;\n&quot;</span>, <span class="string">&quot;。&quot;</span>, <span class="string">&quot;；&quot;</span>, <span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>]</span><br><span class="line">)</span><br><span class="line">chunks = splitter.split_documents(docs)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;生成 <span class="subst">&#123;<span class="built_in">len</span>(chunks)&#125;</span> 个 chunk&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. Embedding + 向量存储</span></span><br><span class="line">embedding = OllamaEmbeddings(model=<span class="string">&quot;nomic-embed-text&quot;</span>)</span><br><span class="line">vectorstore = Chroma.from_documents(</span><br><span class="line">    chunks, embedding, persist_directory=<span class="string">&quot;./chroma_db&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 构建 QA 链</span></span><br><span class="line">retriever = vectorstore.as_retriever(search_kwargs=&#123;<span class="string">&quot;k&quot;</span>: <span class="number">5</span>&#125;)</span><br><span class="line">llm = ChatOllama(model=<span class="string">&quot;llama3.1:8b&quot;</span>, temperature=<span class="number">0</span>)</span><br><span class="line">qa_chain = RetrievalQA.from_chain_type(</span><br><span class="line">    llm=llm, chain_type=<span class="string">&quot;stuff&quot;</span>,</span><br><span class="line">    retriever=retriever, return_source_documents=<span class="literal">True</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 提问</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    query = <span class="built_in">input</span>(<span class="string">&quot;\n请输入问题（输入 q 退出）：&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> query.strip().lower() == <span class="string">&#x27;q&#x27;</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    result = qa_chain.invoke(&#123;<span class="string">&quot;query&quot;</span>: query&#125;)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;\n回答：<span class="subst">&#123;result[<span class="string">&#x27;result&#x27;</span>]&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;\n引用来源：&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> doc <span class="keyword">in</span> result[<span class="string">&quot;source_documents&quot;</span>]:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;  - <span class="subst">&#123;doc.metadata.get(<span class="string">&#x27;source&#x27;</span>, <span class="string">&#x27;unknown&#x27;</span>)&#125;</span>: <span class="subst">&#123;doc.page_content[:<span class="number">80</span>]&#125;</span>...&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre class="python"><code>import os
+from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import OllamaEmbeddings
+from langchain_community.chat_models import ChatOllama
+from langchain.chains import RetrievalQA
+
+# 1. 加载文档
+loader = DirectoryLoader("./resumes/", glob="*.pdf", loader_cls=PyPDFLoader)
+docs = loader.load()
+print(f"加载了 &#123;len(docs)&#125; 页")
+
+# 2. 切分
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=800, chunk_overlap=200,
+    separators=["\n\n", "\n", "。", "；", " ", ""]
+)
+chunks = splitter.split_documents(docs)
+print(f"生成 &#123;len(chunks)&#125; 个 chunk")
+
+# 3. Embedding + 向量存储
+embedding = OllamaEmbeddings(model="nomic-embed-text")
+vectorstore = Chroma.from_documents(
+    chunks, embedding, persist_directory="./chroma_db"
+)
+
+# 4. 构建 QA 链
+retriever = vectorstore.as_retriever(search_kwargs=&#123;"k": 5&#125;)
+llm = ChatOllama(model="llama3.1:8b", temperature=0)
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm, chain_type="stuff",
+    retriever=retriever, return_source_documents=True
+)
+
+# 5. 提问
+while True:
+    query = input("\n请输入问题（输入 q 退出）：")
+    if query.strip().lower() == &#x27;q&#x27;:
+        break
+    result = qa_chain.invoke(&#123;"query": query&#125;)
+    print(f"\n回答：&#123;result[&#x27;result&#x27;]&#125;")
+    print("\n引用来源：")
+    for doc in result["source_documents"]:
+        print(f"  - &#123;doc.metadata.get(&#x27;source&#x27;, &#x27;unknown&#x27;)&#125;: &#123;doc.page_content[:80]&#125;...")
+</code></pre>
 
 <h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>搭下来的感受：RAG 系统的核心不在 LLM，而在数据处理和检索质量。embedding 模型选对、chunk 切好、k 值调对，回答质量就能到一个不错的水平。LLM 本身反而是最容易替换的部分。</p>
 <p>如果后续想继续优化，几个方向可以考虑：</p>

@@ -81,10 +81,6 @@
             <i class="fa-solid fa-id-card fa-fw"></i>
             <span>&ensp;About</span>
         </a>
-                <a href="/about">
-                    <i class="fa-solid fa-id-card fa-fw"></i>
-                    <span>&ensp;About</span>
-                </a>
         
         
         
@@ -197,7 +193,11 @@
 <p>这就催生了参数高效微调（Parameter-Efficient Fine-Tuning, PEFT）的研究方向：能否只训练极少量的参数，就让模型学会新任务？LoRA 就是这个方向上最成功的方案之一。</p>
 <h2 id="LoRA-的核心原理"><a href="#LoRA-的核心原理" class="headerlink" title="LoRA 的核心原理"></a>LoRA 的核心原理</h2><p>LoRA 的全称是 Low-Rank Adaptation，低秩自适应。它的核心假设是：微调过程中的权重更新矩阵具有很低的”内在秩”（intrinsic rank）。</p>
 <p>具体来说，对于预训练模型中的一个权重矩阵 W₀ ∈ R^{d×k}，全量微调会学习一个更新 ΔW ∈ R^{d×k}。LoRA 的做法是将 ΔW 分解为两个低秩矩阵的乘积：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">W = W₀ + B × A</span><br><span class="line"># B ∈ R^&#123;d×r&#125;, A ∈ R^&#123;r×k&#125;</span><br><span class="line"># 可训练参数 = d×r + r×k = r×(d+k)</span><br><span class="line"># 当 r &lt;&lt; min(d, k) 时，参数量大幅减少</span><br></pre></td></tr></table></figure>
+<pre class="plaintext"><code>W = W₀ + B × A
+# B ∈ R^&#123;d×r&#125;, A ∈ R^&#123;r×k&#125;
+# 可训练参数 = d×r + r×k = r×(d+k)
+# 当 r << min(d, k) 时，参数量大幅减少
+</code></pre>
 
 <p>举个例子，LLaMA-7B 的注意力层 d&#x3D;k&#x3D;4096：</p>
 <ul>
@@ -206,7 +206,8 @@
 <li>压缩比：128 倍</li>
 </ul>
 <p>前向传播时，LoRA 的更新会叠加到原始权重上：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">h = W₀ @ x + (B @ A) @ x * (alpha / r)</span><br></pre></td></tr></table></figure>
+<pre class="python"><code>h = W₀ @ x + (B @ A) @ x * (alpha / r)
+</code></pre>
 
 <p>其中 alpha&#x2F;r 是缩放因子，alpha 通常设为 2r。</p>
 <h2 id="LoRA-的关键超参数"><a href="#LoRA-的关键超参数" class="headerlink" title="LoRA 的关键超参数"></a>LoRA 的关键超参数</h2><table>
@@ -283,23 +284,116 @@
 <p>QLoRA 的突破性意义在于：7B 模型可以在免费 Google Colab T4 上完成微调。</p>
 <h2 id="实战：在-Colab-上用中文维基百科微调模型"><a href="#实战：在-Colab-上用中文维基百科微调模型" class="headerlink" title="实战：在 Colab 上用中文维基百科微调模型"></a>实战：在 Colab 上用中文维基百科微调模型</h2><h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><p>Google Colab 免费版提供的 T4 GPU 有 16GB 显存，足以运行 QLoRA 微调一个 7B 模型。</p>
 <p>首先安装必要的库：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!pip install -q transformers peft datasets accelerate bitsandbytes trl modelscope</span><br></pre></td></tr></table></figure>
+<pre class="python"><code>!pip install -q transformers peft datasets accelerate bitsandbytes trl modelscope
+</code></pre>
 
 <h3 id="从-ModelScope-下载中文维基百科数据集"><a href="#从-ModelScope-下载中文维基百科数据集" class="headerlink" title="从 ModelScope 下载中文维基百科数据集"></a>从 ModelScope 下载中文维基百科数据集</h3><p>ModelScope 是阿里的开源模型平台，提供了大量中文数据集。中文维基百科数据集 <code>wikipedia-cn-20230720-filtered</code> 包含了经过清洗的中文维基百科内容。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> modelscope <span class="keyword">import</span> snapshot_download</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载数据集</span></span><br><span class="line">dataset_path = snapshot_download(</span><br><span class="line">    <span class="string">&#x27;AI-ModelScope/wikipedia-cn-20230720-filtered&#x27;</span>,</span><br><span class="line">    cache_dir=<span class="string">&#x27;./data&#x27;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<pre class="python"><code>from modelscope import snapshot_download
+
+# 下载数据集
+dataset_path = snapshot_download(
+    &#x27;AI-ModelScope/wikipedia-cn-20230720-filtered&#x27;,
+    cache_dir=&#x27;./data&#x27;
+)
+</code></pre>
 
 <p>数据集下载后需要做一些预处理，将原始文本转换为指令微调格式。维基百科数据通常是纯文本段落，我们需要将其构造为问答对或指令格式。</p>
-<h3 id="加载模型（4-bit-量化）"><a href="#加载模型（4-bit-量化）" class="headerlink" title="加载模型（4-bit 量化）"></a>加载模型（4-bit 量化）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4-bit 量化配置</span></span><br><span class="line">bnb_config = BitsAndBytesConfig(</span><br><span class="line">    load_in_4bit=<span class="literal">True</span>,</span><br><span class="line">    bnb_4bit_quant_type=<span class="string">&quot;nf4&quot;</span>,</span><br><span class="line">    bnb_4bit_compute_dtype=torch.bfloat16,</span><br><span class="line">    bnb_4bit_use_double_quant=<span class="literal">True</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载模型和分词器</span></span><br><span class="line">model_id = <span class="string">&quot;Qwen/Qwen2.5-7B-Instruct&quot;</span>  <span class="comment"># 或其他适合的中文模型</span></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=<span class="literal">True</span>)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    model_id,</span><br><span class="line">    quantization_config=bnb_config,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span>,</span><br><span class="line">    trust_remote_code=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="加载模型（4-bit-量化）"><a href="#加载模型（4-bit-量化）" class="headerlink" title="加载模型（4-bit 量化）"></a>加载模型（4-bit 量化）</h3><pre class="python"><code>import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
-<h3 id="注入-LoRA"><a href="#注入-LoRA" class="headerlink" title="注入 LoRA"></a>注入 LoRA</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> LoraConfig, get_peft_model, prepare_model_for_kbit_training</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备模型进行量化训练</span></span><br><span class="line">model = prepare_model_for_kbit_training(model)</span><br><span class="line"></span><br><span class="line"><span class="comment"># LoRA 配置</span></span><br><span class="line">lora_config = LoraConfig(</span><br><span class="line">    r=<span class="number">16</span>,</span><br><span class="line">    lora_alpha=<span class="number">32</span>,</span><br><span class="line">    target_modules=[<span class="string">&quot;q_proj&quot;</span>, <span class="string">&quot;k_proj&quot;</span>, <span class="string">&quot;v_proj&quot;</span>, <span class="string">&quot;o_proj&quot;</span>,</span><br><span class="line">                    <span class="string">&quot;gate_proj&quot;</span>, <span class="string">&quot;up_proj&quot;</span>, <span class="string">&quot;down_proj&quot;</span>],</span><br><span class="line">    lora_dropout=<span class="number">0.05</span>,</span><br><span class="line">    bias=<span class="string">&quot;none&quot;</span>,</span><br><span class="line">    task_type=<span class="string">&quot;CAUSAL_LM&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">model = get_peft_model(model, lora_config)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看可训练参数量</span></span><br><span class="line">model.print_trainable_parameters()</span><br><span class="line"><span class="comment"># 输出类似：trainable params: 41,943,040 || all params: 7,614,556,160 || trainable%: 0.55%</span></span><br></pre></td></tr></table></figure>
+# 4-bit 量化配置
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    bnb_4bit_use_double_quant=True,
+)
 
-<h3 id="训练配置与执行"><a href="#训练配置与执行" class="headerlink" title="训练配置与执行"></a>训练配置与执行</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> trl <span class="keyword">import</span> SFTTrainer</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> TrainingArguments</span><br><span class="line"></span><br><span class="line">training_args = TrainingArguments(</span><br><span class="line">    output_dir=<span class="string">&quot;./output&quot;</span>,</span><br><span class="line">    per_device_train_batch_size=<span class="number">1</span>,</span><br><span class="line">    gradient_accumulation_steps=<span class="number">8</span>,</span><br><span class="line">    learning_rate=<span class="number">2e-4</span>,</span><br><span class="line">    num_train_epochs=<span class="number">3</span>,</span><br><span class="line">    logging_steps=<span class="number">10</span>,</span><br><span class="line">    save_steps=<span class="number">100</span>,</span><br><span class="line">    warmup_ratio=<span class="number">0.1</span>,</span><br><span class="line">    fp16=<span class="literal">True</span>,</span><br><span class="line">    optim=<span class="string">&quot;paged_adamw_8bit&quot;</span>,</span><br><span class="line">    gradient_checkpointing=<span class="literal">True</span>,</span><br><span class="line">    report_to=<span class="string">&quot;none&quot;</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer = SFTTrainer(</span><br><span class="line">    model=model,</span><br><span class="line">    args=training_args,</span><br><span class="line">    train_dataset=train_dataset,</span><br><span class="line">    tokenizer=tokenizer,</span><br><span class="line">    max_seq_length=<span class="number">512</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer.train()</span><br></pre></td></tr></table></figure>
+# 加载模型和分词器
+model_id = "Qwen/Qwen2.5-7B-Instruct"  # 或其他适合的中文模型
+tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    quantization_config=bnb_config,
+    device_map="auto",
+    trust_remote_code=True
+)
+</code></pre>
+
+<h3 id="注入-LoRA"><a href="#注入-LoRA" class="headerlink" title="注入 LoRA"></a>注入 LoRA</h3><pre class="python"><code>from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+
+# 准备模型进行量化训练
+model = prepare_model_for_kbit_training(model)
+
+# LoRA 配置
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
+                    "gate_proj", "up_proj", "down_proj"],
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+
+model = get_peft_model(model, lora_config)
+
+# 查看可训练参数量
+model.print_trainable_parameters()
+# 输出类似：trainable params: 41,943,040 || all params: 7,614,556,160 || trainable%: 0.55%
+</code></pre>
+
+<h3 id="训练配置与执行"><a href="#训练配置与执行" class="headerlink" title="训练配置与执行"></a>训练配置与执行</h3><pre class="python"><code>from trl import SFTTrainer
+from transformers import TrainingArguments
+
+training_args = TrainingArguments(
+    output_dir="./output",
+    per_device_train_batch_size=1,
+    gradient_accumulation_steps=8,
+    learning_rate=2e-4,
+    num_train_epochs=3,
+    logging_steps=10,
+    save_steps=100,
+    warmup_ratio=0.1,
+    fp16=True,
+    optim="paged_adamw_8bit",
+    gradient_checkpointing=True,
+    report_to="none",
+)
+
+trainer = SFTTrainer(
+    model=model,
+    args=training_args,
+    train_dataset=train_dataset,
+    tokenizer=tokenizer,
+    max_seq_length=512,
+)
+
+trainer.train()
+</code></pre>
 
 <h3 id="保存与合并-LoRA-权重"><a href="#保存与合并-LoRA-权重" class="headerlink" title="保存与合并 LoRA 权重"></a>保存与合并 LoRA 权重</h3><p>训练完成后，LoRA adapter 的大小通常只有几十 MB，远小于完整的模型权重。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保存 LoRA adapter</span></span><br><span class="line">model.save_pretrained(<span class="string">&quot;./lora_adapter&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果需要合并回基础模型（可选）</span></span><br><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> PeftModel</span><br><span class="line"></span><br><span class="line">base_model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    model_id,</span><br><span class="line">    torch_dtype=torch.bfloat16,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span></span><br><span class="line">)</span><br><span class="line">merged_model = PeftModel.from_pretrained(base_model, <span class="string">&quot;./lora_adapter&quot;</span>)</span><br><span class="line">merged_model = merged_model.merge_and_unload()</span><br><span class="line">merged_model.save_pretrained(<span class="string">&quot;./merged_model&quot;</span>)</span><br></pre></td></tr></table></figure>
+<pre class="python"><code># 保存 LoRA adapter
+model.save_pretrained("./lora_adapter")
+
+# 如果需要合并回基础模型（可选）
+from peft import PeftModel
+
+base_model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    torch_dtype=torch.bfloat16,
+    device_map="auto"
+)
+merged_model = PeftModel.from_pretrained(base_model, "./lora_adapter")
+merged_model = merged_model.merge_and_unload()
+merged_model.save_pretrained("./merged_model")
+</code></pre>
 
 <h2 id="训练过程中的注意事项"><a href="#训练过程中的注意事项" class="headerlink" title="训练过程中的注意事项"></a>训练过程中的注意事项</h2><p><strong>数据格式</strong>：中文维基百科的原始数据需要转换为指令格式。比如可以构造如下问答对：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">instruction: 请介绍关于&#123;主题&#125;的知识</span><br><span class="line">input: （可选的上下文）</span><br><span class="line">output: &#123;维基百科段落内容&#125;</span><br></pre></td></tr></table></figure>
+<pre class="plaintext"><code>instruction: 请介绍关于&#123;主题&#125;的知识
+input: （可选的上下文）
+output: &#123;维基百科段落内容&#125;
+</code></pre>
 
 <p><strong>序列长度</strong>：在 T4 GPU 上，max_seq_length 建议设为 512 或 1024。太长会占用过多显存，太短会截断有用信息。</p>
 <p><strong>批次大小</strong>：free tier GPU 上通常只能用 batch_size&#x3D;1，通过 gradient_accumulation_steps 来等效增大有效批次。</p>

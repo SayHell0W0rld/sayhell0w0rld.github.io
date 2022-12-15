@@ -81,10 +81,6 @@
             <i class="fa-solid fa-id-card fa-fw"></i>
             <span>&ensp;About</span>
         </a>
-                <a href="/about">
-                    <i class="fa-solid fa-id-card fa-fw"></i>
-                    <span>&ensp;About</span>
-                </a>
         
         
         
@@ -210,11 +206,14 @@
 </ul>
 <p>TLS 1.3 简化了这个命名，因为密钥交换和签名算法基本固定了（ECDHE + 灵活选择签名算法），套件名只保留加密和哈希部分，比如 TLS_AES_128_GCM_SHA256。</p>
 <p>在排查问题时，我用 openssl 查了下双方支持的套件列表：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看服务端支持的加密套件</span></span><br><span class="line">openssl s_client -connect example.com:443 -cipher <span class="string">&#x27;ECDHE+AESGCM&#x27;</span></span><br></pre></td></tr></table></figure>
+<pre class="bash"><code># 查看服务端支持的加密套件
+openssl s_client -connect example.com:443 -cipher &#x27;ECDHE+AESGCM&#x27;
+</code></pre>
 
 <p>发现对方服务器默认排序里把一些老套件排在前面，而我们客户端出于安全考虑禁用了那些套件，双方交集变小，握手就慢了。</p>
 <h2 id="Wireshark-抓包实战"><a href="#Wireshark-抓包实战" class="headerlink" title="Wireshark 抓包实战"></a>Wireshark 抓包实战</h2><p>实际操作中，我用 tcpdump 先抓包：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 -w tls_capture.pcap port 443</span><br></pre></td></tr></table></figure>
+<pre class="bash"><code>sudo tcpdump -i eth0 -w tls_capture.pcap port 443
+</code></pre>
 
 <p>然后把 pcap 文件拖进 Wireshark 里分析。Wireshark 对 TLS 协议的解析做得很好，展开每一条消息能直接看到：</p>
 <ul>

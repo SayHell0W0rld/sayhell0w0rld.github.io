@@ -81,10 +81,6 @@
             <i class="fa-solid fa-id-card fa-fw"></i>
             <span>&ensp;About</span>
         </a>
-                <a href="/about">
-                    <i class="fa-solid fa-id-card fa-fw"></i>
-                    <span>&ensp;About</span>
-                </a>
         
         
         
@@ -200,7 +196,11 @@
 <li><strong>色调和光照（Color&#x2F;Lighting）</strong>：iridescent gold、cinematic lighting、rim lighting。</li>
 </ol>
 <p>一个完整的提示词可能是这样的：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Emma Watson as a powerful mysterious sorceress, casting lightning magic,</span><br><span class="line">detailed clothing, digital painting, hyperrealistic, fantasy, Surrealist,</span><br><span class="line">full body, by Stanley Artgerm Lau and Alphonse Mucha, artstation,</span><br><span class="line">highly detailed, sharp focus, iridescent gold, cinematic lighting</span><br></pre></td></tr></table></figure>
+<pre class="plaintext"><code>Emma Watson as a powerful mysterious sorceress, casting lightning magic,
+detailed clothing, digital painting, hyperrealistic, fantasy, Surrealist,
+full body, by Stanley Artgerm Lau and Alphonse Mucha, artstation,
+highly detailed, sharp focus, iridescent gold, cinematic lighting
+</code></pre>
 
 <p>不需要每类都填。画家、网站和风格之间有重叠，根据需要组合就行。</p>
 <h2 id="提示词顺序很重要"><a href="#提示词顺序很重要" class="headerlink" title="提示词顺序很重要"></a>提示词顺序很重要</h2><p>写提示词的时候，顺序代表优先级。靠前的词权重大于靠后的词。所以最重要的内容要放在前面。</p>
@@ -215,7 +215,12 @@
 <li><strong>改变整体风格</strong>：负面提示词加blur让画面更清晰，加painting或cartoon让画面更写实。</li>
 </ol>
 <p>通用的负面提示词模板：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face,</span><br><span class="line">out of frame, extra limbs, disfigured, deformed, body out of frame,</span><br><span class="line">bad anatomy, watermark, signature, cut off, low contrast,</span><br><span class="line">underexposed, overexposed, bad art, beginner, amateur,</span><br><span class="line">distorted face, blurry, draft, grainy</span><br></pre></td></tr></table></figure>
+<pre class="plaintext"><code>ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face,
+out of frame, extra limbs, disfigured, deformed, body out of frame,
+bad anatomy, watermark, signature, cut off, low contrast,
+underexposed, overexposed, bad art, beginner, amateur,
+distorted face, blurry, draft, grainy
+</code></pre>
 
 <h2 id="权重控制：微调每个词的影响"><a href="#权重控制：微调每个词的影响" class="headerlink" title="权重控制：微调每个词的影响"></a>权重控制：微调每个词的影响</h2><p>提示词里每个关键词都可以调整权重。</p>
 <p><strong>WebUI语法：</strong></p>
@@ -233,11 +238,13 @@
 <p>比如 <code>[apple : fire : 0.5]</code> — 前一半步数生成苹果的特征，后一半步数生成火焰的特征。最终出来的图是两者的混合体。</p>
 <p>这里有个关键点：<strong>第一个关键词决定整体构图</strong>。第二个关键词只影响细节。所以如果想保持某种构图，第一个词要写清楚。</p>
 <p>这个技巧也可以用来融合人脸。比如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(Emma Watson:0.5), (Tara Reid:0.9), (Ana de Armas:1.2)</span><br></pre></td></tr></table></figure>
+<pre class="plaintext"><code>(Emma Watson:0.5), (Tara Reid:0.9), (Ana de Armas:1.2)
+</code></pre>
 
 <p>多个名人名字加权重混合，生成一张具有混合特征的脸。</p>
 <h2 id="提示词矩阵和调度"><a href="#提示词矩阵和调度" class="headerlink" title="提示词矩阵和调度"></a>提示词矩阵和调度</h2><p><strong>Prompt Matrix（提示词矩阵）：</strong> 用|分隔关键词，WebUI会自动生成所有关键词组合的图片。比如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a busy city street | illustration | cinematic lighting</span><br></pre></td></tr></table></figure>
+<pre class="plaintext"><code>a busy city street | illustration | cinematic lighting
+</code></pre>
 
 <p>会生成4张图：单独street、street+illustration、street+cinematic lighting、street+illustration+cinematic lighting。适合快速测试不同关键词的效果。</p>
 <p><strong>Prompt Schedule（步数调度）：</strong> 在采样过程中动态改变提示词。</p>

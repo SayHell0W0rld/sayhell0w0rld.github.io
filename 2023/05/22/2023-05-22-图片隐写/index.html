@@ -81,10 +81,6 @@
             <i class="fa-solid fa-id-card fa-fw"></i>
             <span>&ensp;About</span>
         </a>
-                <a href="/about">
-                    <i class="fa-solid fa-id-card fa-fw"></i>
-                    <span>&ensp;About</span>
-                </a>
         
         
         
@@ -196,7 +192,42 @@
 <li>遍历图片像素，逐位替换LSB</li>
 <li>保存含密图片</li>
 </ol>
-<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">% 嵌入函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">embed_lsb</span><span class="params">(cover_img_path, secret_message, output_path)</span></span></span><br><span class="line">    <span class="comment">% 读取载体图片</span></span><br><span class="line">    cover = imread(cover_img_path);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">% 把消息转成二进制</span></span><br><span class="line">    msg_bytes = uint8(secret_message);</span><br><span class="line">    msg_bits = <span class="built_in">reshape</span>(de2bi(msg_bytes, <span class="number">8</span>, <span class="string">&#x27;left-msb&#x27;</span>)&#x27;, <span class="number">1</span>, []);</span><br><span class="line">    msg_len = <span class="built_in">length</span>(msg_bits);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">% 加入长度头（32位，最多记录约42亿位）</span></span><br><span class="line">    len_bits = de2bi(msg_len, <span class="number">32</span>, <span class="string">&#x27;left-msb&#x27;</span>);</span><br><span class="line">    all_bits = [len_bits, msg_bits];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">% 检查容量</span></span><br><span class="line">    [h, w, c] = <span class="built_in">size</span>(cover);</span><br><span class="line">    capacity = h * w * c;</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">length</span>(all_bits) &gt; capacity</span><br><span class="line">        error(<span class="string">&#x27;消息太长，放不下&#x27;</span>);</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">% 展开像素为一维</span></span><br><span class="line">    cover_flat = cover(:);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">% 逐位嵌入</span></span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>:<span class="built_in">length</span>(all_bits)</span><br><span class="line">        pixel_val = double(cover_flat(<span class="built_in">i</span>));</span><br><span class="line">        <span class="comment">% 清除最低位，写入新bit</span></span><br><span class="line">        cover_flat(<span class="built_in">i</span>) = uint8(bitand(pixel_val, <span class="number">254</span>) + all_bits(<span class="built_in">i</span>));</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">% 重塑并保存</span></span><br><span class="line">    output = uint8(<span class="built_in">reshape</span>(cover_flat, h, w, c));</span><br><span class="line">    imwrite(output, output_path);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<pre class="matlab"><code>% 嵌入函数
+function embed_lsb(cover_img_path, secret_message, output_path)
+    % 读取载体图片
+    cover = imread(cover_img_path);
+    
+    % 把消息转成二进制
+    msg_bytes = uint8(secret_message);
+    msg_bits = reshape(de2bi(msg_bytes, 8, &#x27;left-msb&#x27;)&#x27;, 1, []);
+    msg_len = length(msg_bits);
+    
+    % 加入长度头（32位，最多记录约42亿位）
+    len_bits = de2bi(msg_len, 32, &#x27;left-msb&#x27;);
+    all_bits = [len_bits, msg_bits];
+    
+    % 检查容量
+    [h, w, c] = size(cover);
+    capacity = h * w * c;
+    if length(all_bits) > capacity
+        error(&#x27;消息太长，放不下&#x27;);
+    end
+    
+    % 展开像素为一维
+    cover_flat = cover(:);
+    
+    % 逐位嵌入
+    for i = 1:length(all_bits)
+        pixel_val = double(cover_flat(i));
+        % 清除最低位，写入新bit
+        cover_flat(i) = uint8(bitand(pixel_val, 254) + all_bits(i));
+    end
+    
+    % 重塑并保存
+    output = uint8(reshape(cover_flat, h, w, c));
+    imwrite(output, output_path);
+end
+</code></pre>
 
 <p>几个注意点：</p>
 <ul>
@@ -205,7 +236,34 @@
 <li><code>bitand(pixel_val, 254)</code>把最低位清零，<code>+ all_bits(i)</code>写入新值，比XOR写法更直观</li>
 </ul>
 <h2 id="Matlab实现：提取端"><a href="#Matlab实现：提取端" class="headerlink" title="Matlab实现：提取端"></a>Matlab实现：提取端</h2><p>提取是嵌入的逆操作：</p>
-<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">message</span> = <span class="title">extract_lsb</span><span class="params">(stego_img_path)</span></span></span><br><span class="line">    stego = imread(stego_img_path);</span><br><span class="line">    stego_flat = stego(:);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">% 先读32位长度头</span></span><br><span class="line">    len_bits = <span class="built_in">zeros</span>(<span class="number">1</span>, <span class="number">32</span>);</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>:<span class="number">32</span></span><br><span class="line">        len_bits(<span class="built_in">i</span>) = <span class="built_in">mod</span>(double(stego_flat(<span class="built_in">i</span>)), <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    msg_len = bi2de(len_bits, <span class="string">&#x27;left-msb&#x27;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">% 再读消息位</span></span><br><span class="line">    msg_bits = <span class="built_in">zeros</span>(<span class="number">1</span>, msg_len);</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>:msg_len</span><br><span class="line">        msg_bits(<span class="built_in">i</span>) = <span class="built_in">mod</span>(double(stego_flat(<span class="number">32</span> + <span class="built_in">i</span>)), <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">% 二进制转字节</span></span><br><span class="line">    num_bytes = <span class="built_in">ceil</span>(msg_len / <span class="number">8</span>);</span><br><span class="line">    msg_bytes = <span class="built_in">zeros</span>(<span class="number">1</span>, num_bytes);</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>:num_bytes</span><br><span class="line">        byte_bits = msg_bits((<span class="built_in">i</span><span class="number">-1</span>)*<span class="number">8</span>+<span class="number">1</span> : <span class="built_in">min</span>(<span class="built_in">i</span>*<span class="number">8</span>, msg_len));</span><br><span class="line">        msg_bytes(<span class="built_in">i</span>) = bi2de(byte_bits, <span class="string">&#x27;left-msb&#x27;</span>);</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line">    message = char(uint8(msg_bytes));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<pre class="matlab"><code>function message = extract_lsb(stego_img_path)
+    stego = imread(stego_img_path);
+    stego_flat = stego(:);
+    
+    % 先读32位长度头
+    len_bits = zeros(1, 32);
+    for i = 1:32
+        len_bits(i) = mod(double(stego_flat(i)), 2);
+    end
+    msg_len = bi2de(len_bits, &#x27;left-msb&#x27;);
+    
+    % 再读消息位
+    msg_bits = zeros(1, msg_len);
+    for i = 1:msg_len
+        msg_bits(i) = mod(double(stego_flat(32 + i)), 2);
+    end
+    
+    % 二进制转字节
+    num_bytes = ceil(msg_len / 8);
+    msg_bytes = zeros(1, num_bytes);
+    for i = 1:num_bytes
+        byte_bits = msg_bits((i-1)*8+1 : min(i*8, msg_len));
+        msg_bytes(i) = bi2de(byte_bits, &#x27;left-msb&#x27;);
+    end
+    
+    message = char(uint8(msg_bytes));
+end
+</code></pre>
 
 <p>提取时有个坑：如果嵌入时没用长度头，提取端就不知道该读多少位。我一开始用<code>0xFFFFFFFF</code>做结束符，结果发现秘密信息里如果包含这个序列就会提前截断。后来改成32位长度头，问题解决。</p>
 <h2 id="抗干扰测试"><a href="#抗干扰测试" class="headerlink" title="抗干扰测试"></a>抗干扰测试</h2><p>隐写术要实用，光嵌入和提取还不够——图片经过常见操作后，秘密信息还能恢复吗？这才是实际应用中的关键问题。</p>

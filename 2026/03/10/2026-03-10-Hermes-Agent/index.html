@@ -81,10 +81,6 @@
             <i class="fa-solid fa-id-card fa-fw"></i>
             <span>&ensp;About</span>
         </a>
-                <a href="/about">
-                    <i class="fa-solid fa-id-card fa-fw"></i>
-                    <span>&ensp;About</span>
-                </a>
         
         
         
@@ -240,7 +236,33 @@
 <hr>
 <h2 id="技能系统：从经验中提取操作流程"><a href="#技能系统：从经验中提取操作流程" class="headerlink" title="技能系统：从经验中提取操作流程"></a>技能系统：从经验中提取操作流程</h2><p>记忆解决的是”记住事实”的问题，技能解决的是”记住做法”的问题。</p>
 <p>Hermes Agent 的 Skills 系统把可复用的操作流程打包成 Markdown 文件，存储在 <code>~/.hermes/skills/</code> 目录下。每个 Skill 是一个 SKILL.md 文件，包含：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">my-deploy-checklist</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">我的部署检查清单</span></span><br><span class="line"><span class="attr">version:</span> <span class="number">1.0</span><span class="number">.0</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">hermes:</span></span><br><span class="line">    <span class="attr">tags:</span> [<span class="string">deploy</span>, <span class="string">checklist</span>]</span><br><span class="line">    <span class="attr">category:</span> <span class="string">devops</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="comment"># 部署检查清单</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## When to Use</span></span><br><span class="line"><span class="string">用户要求部署项目时</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Procedure</span></span><br><span class="line"><span class="number">1</span><span class="string">.</span> <span class="string">检查</span> <span class="string">Git</span> <span class="string">工作区是否干净</span></span><br><span class="line"><span class="number">2</span><span class="string">.</span> <span class="string">跑单元测试</span> <span class="string">`make</span> <span class="string">test`</span></span><br><span class="line"><span class="number">3</span><span class="string">.</span> <span class="string">构建</span> <span class="string">Docker</span> <span class="string">镜像</span></span><br><span class="line"><span class="number">4</span><span class="string">.</span> <span class="string">推送到</span> <span class="string">registry</span></span><br><span class="line"><span class="number">5</span><span class="string">.</span> <span class="string">更新</span> <span class="string">Kubernetes</span> <span class="string">deployment</span></span><br><span class="line"><span class="number">6</span><span class="string">.</span> <span class="string">验证</span> <span class="string">health</span> <span class="string">check</span> <span class="string">通过</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## Pitfalls</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">如果</span> <span class="string">`make</span> <span class="string">test`</span> <span class="string">失败，不要跳过直接部署</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">Docker</span> <span class="string">build</span> <span class="string">cache</span> <span class="string">可能导致旧代码被缓存，加</span> <span class="string">`--no-cache`</span></span><br></pre></td></tr></table></figure>
+<pre class="yaml"><code>---
+name: my-deploy-checklist
+description: 我的部署检查清单
+version: 1.0.0
+metadata:
+  hermes:
+    tags: [deploy, checklist]
+    category: devops
+---
+
+# 部署检查清单
+
+## When to Use
+用户要求部署项目时
+
+## Procedure
+1. 检查 Git 工作区是否干净
+2. 跑单元测试 `make test`
+3. 构建 Docker 镜像
+4. 推送到 registry
+5. 更新 Kubernetes deployment
+6. 验证 health check 通过
+
+## Pitfalls
+- 如果 `make test` 失败，不要跳过直接部署
+- Docker build cache 可能导致旧代码被缓存，加 `--no-cache`
+</code></pre>
 
 <h3 id="技能是怎么被创建的"><a href="#技能是怎么被创建的" class="headerlink" title="技能是怎么被创建的"></a>技能是怎么被创建的</h3><p>Hermes Agent 不需要你手动写技能。当你完成一个复杂任务、遇到错误后恢复、或者纠正了 Agent 的行为时，Agent 会自动判断这个流程是否值得保存为技能。</p>
 <p>触发条件包括：</p>
@@ -267,7 +289,8 @@
 <p>这防止了技能目录随着时间膨胀成一堆冗余文件。</p>
 <hr>
 <h2 id="记忆-技能-自我改进循环"><a href="#记忆-技能-自我改进循环" class="headerlink" title="记忆 + 技能 &#x3D; 自我改进循环"></a>记忆 + 技能 &#x3D; 自我改进循环</h2><p>记忆和技能不是孤立工作的，它们构成一个闭环：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">执行任务 → 验证结果 → 保存持久教训到记忆 → 如果流程可复用，创建/更新技能</span><br></pre></td></tr></table></figure>
+<pre class="plaintext"><code>执行任务 → 验证结果 → 保存持久教训到记忆 → 如果流程可复用，创建/更新技能
+</code></pre>
 
 <h3 id="举个具体例子"><a href="#举个具体例子" class="headerlink" title="举个具体例子"></a>举个具体例子</h3><p>假设我让 Hermes Agent 帮我部署一个 Node.js 项目。</p>
 <p><strong>第一次</strong>：</p>
@@ -290,16 +313,30 @@
 </ul>
 <p><strong>这就是自我改进的实际含义。</strong> 不是模型被重新训练了，而是 Agent 层面的上下文管理变得更好了。</p>
 <hr>
-<h2 id="实际搭建：我怎么配置的"><a href="#实际搭建：我怎么配置的" class="headerlink" title="实际搭建：我怎么配置的"></a>实际搭建：我怎么配置的</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</span><br></pre></td></tr></table></figure>
+<h2 id="实际搭建：我怎么配置的"><a href="#实际搭建：我怎么配置的" class="headerlink" title="实际搭建：我怎么配置的"></a>实际搭建：我怎么配置的</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre class="bash"><code>curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+</code></pre>
 
 <p>安装后跑 <code>hermes setup --portal</code>，一次 OAuth 完成模型配置和工具网关（web search、image generation、TTS、browser）。</p>
-<h3 id="记忆配置"><a href="#记忆配置" class="headerlink" title="记忆配置"></a>记忆配置</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/.hermes/config.yaml</span></span><br><span class="line"><span class="attr">memory:</span></span><br><span class="line">  <span class="attr">memory_enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">user_profile_enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">memory_char_limit:</span> <span class="number">2200</span></span><br><span class="line">  <span class="attr">user_char_limit:</span> <span class="number">1375</span></span><br><span class="line">  <span class="attr">write_approval:</span> <span class="literal">false</span>  <span class="comment"># 改成 true 可以开启写入审批</span></span><br></pre></td></tr></table></figure>
+<h3 id="记忆配置"><a href="#记忆配置" class="headerlink" title="记忆配置"></a>记忆配置</h3><pre class="yaml"><code># ~/.hermes/config.yaml
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 2200
+  user_char_limit: 1375
+  write_approval: false  # 改成 true 可以开启写入审批
+</code></pre>
 
 <h3 id="技能目录"><a href="#技能目录" class="headerlink" title="技能目录"></a>技能目录</h3><p>默认技能在 <code>~/.hermes/skills/</code>。可以添加外部目录：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/.hermes/config.yaml</span></span><br><span class="line"><span class="attr">skills:</span></span><br><span class="line">  <span class="attr">external_dirs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">~/team-skills</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/home/shared/common-skills</span></span><br></pre></td></tr></table></figure>
+<pre class="yaml"><code># ~/.hermes/config.yaml
+skills:
+  external_dirs:
+    - ~/team-skills
+    - /home/shared/common-skills
+</code></pre>
 
 <h3 id="自动化调度"><a href="#自动化调度" class="headerlink" title="自动化调度"></a>自动化调度</h3><p>Hermes Agent 内置 cron，可以定时执行任务并推送到 Telegram&#x2F;Discord 等平台。比如每周五自动跑一次代码质量检查，结果推送到 Slack：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hermes cron add &quot;每周五下午5点跑代码检查&quot; --schedule &quot;0 17 * * 5&quot; --skill code-quality --deliver slack</span><br></pre></td></tr></table></figure>
+<pre class="plaintext"><code>hermes cron add "每周五下午5点跑代码检查" --schedule "0 17 * * 5" --skill code-quality --deliver slack
+</code></pre>
 
 <hr>
 <h2 id="跟其他方案的对比"><a href="#跟其他方案的对比" class="headerlink" title="跟其他方案的对比"></a>跟其他方案的对比</h2><table>
