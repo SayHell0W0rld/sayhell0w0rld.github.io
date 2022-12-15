@@ -973,3 +973,44 @@ ol li {
         padding-left: 20px;
     }
 }
+
+/* Fix code block rendering */
+figure.highlight {
+    margin: 25px 0;
+    border: 1px solid #ebeef5;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px 0 #0000001a;
+}
+figure.highlight table {
+    margin: 0;
+    width: 100%;
+    border-collapse: collapse;
+}
+figure.highlight td {
+    padding: 0;
+    vertical-align: top;
+}
+figure.highlight td.gutter {
+    width: 50px;
+    text-align: right;
+    padding: 20px 10px;
+    background: #f6f8fa;
+    border-right: 1px solid #ebeef5;
+}
+figure.highlight td.gutter pre {
+    margin: 0;
+    color: #999;
+    font-size: 13px;
+    line-height: 1.6;
+}
+figure.highlight td.code {
+    padding: 20px;
+    overflow-x: auto;
+}
+figure.highlight td.code pre {
+    margin: 0;
+    white-space: pre;
+    font-size: 13px;
+    line-height: 1.6;
+}

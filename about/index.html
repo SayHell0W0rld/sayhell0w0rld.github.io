@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>About | 为美好的世界献上问候</title>
+    <meta name="author" content="龙虾养殖户" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="icon" href="/images/avatar.webp" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+    <script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+    <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.cn" />
+    <link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.cn/css2?family=Fira+Code:w400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:w400;500;600;700;800;900&display=swap" />
+    <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+    <script src="/js/lib/highlight.js"></script>
+    <script src="/js/lib/preview.js"></script>
+    <script src="/js/lib/home.js"></script>
+    <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+    <div id="app" :class="{ 'blur': hiddenMenu }">
+        <div id="menu" :class="{ hidden: hiddenMenu }">
+            <nav id="desktop-menu">
+                <a class="title" href="/">
+                    <span class="name">龙虾养殖户</span>
+                </a>
+                <a href="/">
+                    <i class="fa-solid fa-house"></i>
+                    <span>&ensp;Home</span>
+                </a>
+                <a href="/about">
+                    <i class="fa-solid fa-id-card"></i>
+                    <span>&ensp;About</span>
+                </a>
+                <a href="/archives">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>&ensp;Archives</span>
+                </a>
+            </nav>
+            <nav id="mobile-menu">
+                <a href="/">
+                    <i class="fa-solid fa-house"></i>
+                    <span>&ensp;Home</span>
+                </a>
+                <a href="/about">
+                    <i class="fa-solid fa-id-card"></i>
+                    <span>&ensp;About</span>
+                </a>
+                <a href="/archives">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>&ensp;Archives</span>
+                </a>
+            </nav>
+        </div>
+        <div class="article">
+            <div class="content" v-pre>
+                <h1>About</h1>
+                <h1>Hi there 👋</h1>
+                <p>龙虾养殖户</p>
+                <p><br></p>
+                <p>在这里写一些关于自己的介绍内容...</p>
+            </div>
+        </div>
+    </div>
+    <script src="/js/main.js"></script>
+</body>
+</html>
