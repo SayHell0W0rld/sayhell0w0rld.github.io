@@ -11,10 +11,10 @@ categories:
 
 ## 写在前面
 
-<!-- more -->
 
 最近在学 Transformer 架构，绕不开这篇 2017 年 Google 团队发表的论文——*Attention Is All You Need*。说实话，第一次读这篇论文的时候，很多概念似懂非懂，尤其是 Multi-Head Attention 和 Positional Encoding 部分。后来翻了几篇解读博客，加上自己动手写了点伪代码，才算真正理清了整篇论文的脉络。这篇文章就是把我理解的过程记录下来，希望能帮到同样在啃这篇论文的人。
 
+<!-- more -->
 ---
 
 ## 一、为什么需要 Transformer？

@@ -11,7 +11,6 @@ categories:
 
 ## 背景：为什么关注 Agent Harness
 
-<!-- more -->
 
 最近在读 Anthropic 发布的一系列关于 Agent Harness 的工程博文，从 2024 年底的 *Building Effective Agents* 到 2025 年底的 *Effective Harnesses for Long-Running Agents*，再到 2026 年初的 *Harness Design for Long-Running Application Development*。这些文章串在一起看，能看到一条清晰的演进线索：模型能力在飞速进步，但真正决定 Agent 能不能落地做事的，是包裹在模型外面的那套工程系统。
 
@@ -19,6 +18,7 @@ LangChain 在 2026 年 3 月发了一篇 *The Anatomy of an Agent Harness*，里
 
 下面是我读完这几篇博文后的技术梳理，侧重核心贡献、技术方案和实验结果。
 
+<!-- more -->
 ---
 
 ## 1. Anthropic 的问题定义：长程 Agent 的四重困境
