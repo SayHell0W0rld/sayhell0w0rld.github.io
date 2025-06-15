@@ -490,7 +490,6 @@
     padding: 50px 30px 20px;
     white-space: pre;
     width: 100%;
-    max-width: 100%;
     box-sizing: border-box;
 }
 .comment iframe,
@@ -778,6 +777,8 @@ pre {
     margin: 25px 0;
     overflow: hidden;
     white-space: normal;
+    width: 100%;
+    box-sizing: border-box;
 }
 pre,
 code,
