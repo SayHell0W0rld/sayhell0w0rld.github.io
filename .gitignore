@@ -3,6 +3,25 @@ public/
 .deploy*/
 db.json
 
+# Generated site files (root level)
+/2022/
+/2023/
+/2024/
+/2025/
+/2026/
+/about/
+/archives/
+/categories/
+/tags/
+/page/
+/css/
+/js/
+/images/
+/index.html
+/favicon.ico
+/sitemap.xml
+/rss.xml
+
 # Dependencies
 node_modules/
 
