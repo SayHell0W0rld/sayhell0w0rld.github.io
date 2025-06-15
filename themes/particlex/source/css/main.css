@@ -536,16 +536,21 @@ body::-webkit-scrollbar-track {
     opacity: 0;
 }
 .hljs-ln-code {
-    padding-left: 20px !important;
-    width: 100%;
+    padding-left: 15px !important;
     white-space: pre;
+    overflow-x: auto;
 }
 .hljs-ln-numbers {
-    border-right: 1px solid #ccc;
-    color: #ccc;
+    border-right: 1px solid #ddd;
+    color: #999;
     padding-right: 10px !important;
+    padding-left: 10px !important;
     text-align: right;
     vertical-align: top;
+    width: 50px !important;
+    min-width: 50px;
+    max-width: 50px;
+    user-select: none;
 }
 .icon {
     color: #5c6b72;
