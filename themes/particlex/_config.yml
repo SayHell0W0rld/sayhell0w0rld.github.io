@@ -2,7 +2,7 @@
 # https://github.com/theme-particlex/hexo-theme-particlex
 
 # Avatar image
-avatar: /images/avatar.webp
+avatar: /images/avatar.jpg
 
 # Home page background image
 background:
@@ -50,6 +50,7 @@ card:
     enable: true
     description: |
         逮虾户
+        爱窝炸死特兵营的士呸比佛
     iconLinks:
     friendLinks:
         Argvchs: https://argvchs.github.io

@@ -6,7 +6,7 @@
     <% if (theme.search.enable) { %>
     <input id="search-bar" class="input" placeholder="搜索" v-model="rawSearch" />
     <% } %>
-    <div id="timeline-wrap" ref="timeline">
+    <div id="timeline-wrap" ref="timeline" v-pre>
         <% posts.reverse().forEach((post, id) => { %>
         <div class="timeline" data-title="<%- post.title.toLowerCase().replace(/\s+/g, "").replace(/"/g, "&quot;") %>">
             <div class="timeline-tail"></div>
