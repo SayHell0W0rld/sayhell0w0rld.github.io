@@ -485,9 +485,13 @@
 .code-content {
     font-size: 13px;
     line-height: 2;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     padding: 50px 30px 20px;
     white-space: pre;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 .comment iframe,
 body::-webkit-scrollbar-track {
@@ -534,6 +538,8 @@ body::-webkit-scrollbar-track {
 }
 .hljs-ln-code {
     padding-left: 20px !important;
+    width: 100%;
+    white-space: pre;
 }
 .hljs-ln-numbers {
     border-right: 1px solid #ccc;
@@ -779,6 +785,10 @@ code,
 .input,
 .language {
     font-family: "Fira Code", "Noto Sans SC", monospace;
+}
+.hljs-ln {
+    width: 100%;
+    table-layout: fixed;
 }
 table:not(.hljs-ln) {
     margin: 15px 0;
