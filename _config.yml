@@ -1,7 +1,7 @@
 # Hexo Configuration
 title: 为美好的世界献上问候
 subtitle: SayHelloWorld的博客
-description: '技术学习笔记与实践记录'
+description:
 keywords: 'AI, Agent, 安全, 技术'
 author: SayHelloWorld
 language: zh-CN
