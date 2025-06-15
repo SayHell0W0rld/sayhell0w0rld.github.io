@@ -2,7 +2,7 @@
 # https://github.com/theme-particlex/hexo-theme-particlex
 
 # Avatar image
-avatar: /images/avatar.jpg
+avatar: /images/avatar.webp
 
 # Home page background image
 background:
@@ -49,8 +49,7 @@ menu:
 card:
     enable: true
     description: |
-        一个对技术充满好奇心的开发者
-        喜欢探索 AI、安全、系统设计等领域的交叉点
+        逮虾户
     iconLinks:
     friendLinks:
         Argvchs: https://argvchs.github.io
